@@ -4,349 +4,173 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Florent Leterme | Portfolio</title>
+    
+    <!-- Polices & Icones -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
-    <!-- Devicon pour les icônes colorées -->
     <link rel="stylesheet" type='text/css' href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css" />
     
-    <style>
-        /* --- VARIABLES & CONFIG --- */
-        :root {
-            --bg-deep: #000000;
-            --text-main: #ffffff;
-            --text-muted: #cbd5e1;
-            --col-academic: #3b82f6; 
-            --col-creative: #a855f7; 
-            --col-divine: #ffd700; 
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            background-color: var(--bg-deep);
-            color: var(--text-main);
-            font-family: 'Outfit', sans-serif;
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
-            width: 100vw;
-        }
-
-        /* --- ARRIÈRE-PLAN 3D --- */
-        #canvas-container {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            z-index: -1; background: #000;
-            pointer-events: none; /* Laisse passer les clics vers le JS si besoin, géré par le script */
-        }
-
-        /* --- AUDIO CONTROL --- */
-        #audio-toggle {
-            position: fixed; bottom: 30px; right: 30px; z-index: 100;
-            background: rgba(255, 255, 255, 0.1); 
-            border: 2px solid rgba(255, 255, 255, 0.6);
-            color: white; padding: 10px; border-radius: 50%; width: 50px; height: 50px;
-            display: flex; align-items: center; justify-content: center;
-            cursor: pointer; transition: all 0.3s ease; opacity: 1;
-            box-shadow: 0 0 15px rgba(0,0,0,0.5);
-            font-size: 1.2rem;
-            backdrop-filter: blur(5px);
-        }
-        #audio-toggle:hover { 
-            background: var(--col-academic); 
-            border-color: white; 
-            transform: scale(1.1); 
-            box-shadow: 0 0 20px var(--col-academic);
-        }
-        
-        @keyframes pulse-attention {
-            0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4); }
-            70% { box-shadow: 0 0 0 15px rgba(255, 255, 255, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
-        }
-        
-        #audio-toggle.muted {
-            opacity: 0.8;
-            background: rgba(0,0,0,0.6);
-            border-color: rgba(255,255,255,0.3);
-            animation: pulse-attention 2s infinite;
-        }
-
-        main { position: relative; z-index: 1; }
-
-        section {
-            min-height: 100vh; display: flex; flex-direction: column; justify-content: center;
-            padding: 2rem 5%; position: relative; pointer-events: none;
-        }
-
-        /* --- GRID LAYOUT (DESKTOP DEFAULT) --- */
-        .hero-grid {
-            display: grid;
-            grid-template-columns: 1.2fr 0.8fr; /* Gauche plus large */
-            gap: 30px;
-            max-width: 1400px;
-            margin: 0 auto;
-            width: 100%;
-            align-items: center;
-        }
-
-        /* --- HUD / GLASS CARDS --- */
-        .glass-card {
-            pointer-events: auto;
-            background: rgba(255, 255, 255, 0.01);
-            backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-left: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 0 20px rgba(0,0,0,0.2); border-radius: 24px; padding: 3rem;
-            position: relative; overflow: hidden;
-            transition: border-color 0.3s;
-            width: 100%;
-        }
-        .glass-card:hover { border-color: rgba(255, 255, 255, 0.3); background: rgba(255, 255, 255, 0.03); }
-
-        /* --- STACK ICONS ANIMATION --- */
-        .tech-stack-row {
-            display: flex; gap: 20px; margin: 25px 0; flex-wrap: wrap;
-            padding: 15px; background: rgba(0,0,0,0.3); border-radius: 12px;
-            border: 1px solid rgba(255,255,255,0.05);
-            align-items: center;
-        }
-        .tech-icon {
-            font-size: 2.5rem;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            animation: float-icon 3s ease-in-out infinite;
-            cursor: help;
-        }
-        .tech-icon:hover { transform: scale(1.4) rotate(10deg); filter: drop-shadow(0 0 10px rgba(255,255,255,0.5)); }
-        
-        .tech-icon:nth-child(1) { animation-delay: 0s; }
-        .tech-icon:nth-child(2) { animation-delay: 0.2s; }
-        .tech-icon:nth-child(3) { animation-delay: 0.4s; }
-        .tech-icon:nth-child(4) { animation-delay: 0.6s; }
-        .tech-icon:nth-child(5) { animation-delay: 0.8s; }
-        .tech-icon:nth-child(6) { animation-delay: 1s; }
-        .tech-icon:nth-child(7) { animation-delay: 1.2s; }
-
-        @keyframes float-icon {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-8px); }
-        }
-
-        /* --- GITHUB FEED CARD --- */
-        .github-feed-card {
-            height: 450px;
-            display: flex; flex-direction: column;
-            border-top: 2px solid var(--col-creative);
-        }
-        .feed-header {
-            display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;
-        }
-        .live-indicator {
-            display: flex; align-items: center; gap: 6px; font-size: 0.7rem; color: #4ade80; text-transform: uppercase; letter-spacing: 1px;
-        }
-        .blink-dot { width: 8px; height: 8px; background: #4ade80; border-radius: 50%; animation: blink 1.5s infinite; }
-        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
-
-        .feed-container {
-            overflow: hidden; position: relative; flex: 1;
-            mask-image: linear-gradient(to bottom, transparent, black 10%, black 90%, transparent);
-            -webkit-mask-image: linear-gradient(to bottom, transparent, black 10%, black 90%, transparent);
-        }
-        .feed-track {
-            display: flex; flex-direction: column; gap: 15px;
-            animation: scroll-up 25s linear infinite;
-        }
-        .feed-track:hover { animation-play-state: paused; }
-
-        @keyframes scroll-up {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(-50%); } 
-        }
-
-        .project-row {
-            background: rgba(255,255,255,0.03); padding: 12px; border-radius: 8px;
-            border-left: 3px solid #333; transition: 0.2s;
-        }
-        .project-row:hover { background: rgba(255,255,255,0.08); border-left-color: var(--col-academic); }
-        .proj-name { font-weight: 700; font-size: 0.95rem; color: #fff; display: block; margin-bottom: 4px; }
-        .proj-meta { display: flex; justify-content: space-between; align-items: center; font-size: 0.75rem; color: #aaa; }
-        .lang-badge { font-family: 'JetBrains Mono'; background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 4px; }
-        
-        .l-php { color: #a29bfe; border: 1px solid #a29bfe; }
-        .l-js { color: #ffeaa7; border: 1px solid #ffeaa7; }
-        .l-java { color: #fab1a0; border: 1px solid #fab1a0; }
-        .l-sql { color: #81ecec; border: 1px solid #81ecec; }
-        .l-py { color: #74b9ff; border: 1px solid #74b9ff; }
-
-
-        /* Typographie */
-        h1 { font-size: clamp(2.5rem, 5vw, 4.5rem); font-weight: 900; margin-bottom: 1rem; line-height: 1.1; color: #fff; text-shadow: 0 4px 20px rgba(0,0,0,1); }
-        h2 { font-size: 1.8rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 12px; text-shadow: 0 2px 10px rgba(0,0,0,0.8); }
-        h3 { font-size: 1.2rem; margin-bottom: 0.5rem; color: #fff; font-weight: 700; text-shadow: 0 2px 5px rgba(0,0,0,0.8); }
-        p { color: var(--text-muted); line-height: 1.7; font-size: 1.1rem; margin-bottom: 1.5rem; font-weight: 500; text-shadow: 0 2px 4px rgba(0,0,0,0.9); }
-        .subtitle { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 4px; color: #fff; margin-bottom: 1rem; display: block; text-shadow: 0 0 10px var(--col-academic); }
-
-        /* Boutons */
-        .cv-actions { display: flex; gap: 15px; margin-top: 25px; padding-top: 25px; border-top: 1px solid rgba(255,255,255,0.1); flex-wrap: wrap; }
-        .btn-cv {
-            cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 10px;
-            padding: 14px 24px; border-radius: 4px; font-weight: 700; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;
-            text-decoration: none; transition: all 0.3s ease; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.3); color: #fff; backdrop-filter: blur(4px);
-            white-space: nowrap;
-        }
-        .btn-cv:hover { background: rgba(255, 255, 255, 0.1); border-color: #fff; box-shadow: 0 0 15px rgba(255,255,255,0.3); }
-        .btn-cv.primary { background: rgba(255, 255, 255, 0.1); border-color: var(--col-academic); color: #fff; }
-        .btn-cv.primary:hover { background: var(--col-academic); border-color: var(--col-academic); box-shadow: 0 0 25px var(--col-academic); }
-        .btn-cv.github-pro { background: rgba(255, 255, 255, 0.1); border-color: var(--col-academic); color: #fff; }
-        .btn-cv.github-pro:hover { background: var(--col-academic); border-color: var(--col-academic); box-shadow: 0 0 25px var(--col-academic); }
-        .btn-cv.github-exp { background: rgba(255, 255, 255, 0.1); border-color: var(--col-creative); color: var(--col-creative); }
-        .btn-cv.github-exp:hover { background: var(--col-creative); border-color: var(--col-creative); color: #fff; box-shadow: 0 0 25px var(--col-creative); }
-
-        /* XP Grid */
-        .xp-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 25px; }
-        .xp-item { background: rgba(0, 0, 0, 0.3); padding: 1.5rem; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.08); transition: 0.3s; will-change: transform, background-color; }
-        .xp-item:hover { background: rgba(255, 255, 255, 0.05); border-color: rgba(255, 255, 255, 0.4); transform: translateY(-5px); }
-        .xp-date { font-size: 0.75rem; font-weight: 700; color: var(--col-academic); display: block; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; text-shadow: 0 0 5px rgba(37, 99, 235, 0.5); }
-
-        /* Nav Sections */
-        .section-nav {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 40px;
-            padding-top: 25px;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        /* Modal */
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.95); z-index: 9999; opacity: 0; align-items: center; justify-content: center; }
-        .cv-document-wrapper { width: 900px; max-width: 95vw; height: 90vh; background: #151515; border: 1px solid #444; border-radius: 12px; display: flex; flex-direction: column; box-shadow: 0 0 50px rgba(0,0,0,1); }
-        .cv-header-toolbar { padding: 15px 25px; background: #222; border-bottom: 1px solid #444; display: flex; justify-content: space-between; align-items: center; }
-        .cv-scroll-area { flex: 1; overflow-y: auto; padding: 50px; background: #151515; }
-        .cv-container { color: #e0e0e0; font-family: 'Helvetica', 'Arial', sans-serif; }
-        
-        /* CV Interne Styles */
-        .cv-top-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 2px solid var(--col-academic); }
-        .cv-name h1 { font-size: 2.5rem; margin: 0; line-height: 1; color: #fff; text-shadow: none; }
-        .cv-name h2 { font-size: 1.2rem; color: var(--col-academic); font-weight: 500; margin: 5px 0 0 0; text-shadow: none; }
-        .cv-contact { text-align: right; font-size: 0.9rem; line-height: 1.6; color: #aaa; text-shadow: none; }
-        .cv-contact a { color: #fff; text-decoration: none; border-bottom: 1px solid #444; }
-        .cv-section-title { font-family: 'JetBrains Mono'; font-weight: 700; color: #fff; background: rgba(59, 130, 246, 0.15); padding: 8px 12px; border-left: 3px solid var(--col-academic); margin: 25px 0 15px 0; text-transform: uppercase; font-size: 1rem; text-shadow: none; }
-        .cv-entry { margin-bottom: 20px; border-left: 1px solid #444; padding-left: 15px; }
-        .cv-entry-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 5px; flex-wrap: wrap; gap: 5px; }
-        .cv-job-title { font-size: 1.1rem; font-weight: 700; color: #fff; text-shadow: none; }
-        .cv-date { font-family: 'JetBrains Mono'; font-size: 0.85rem; color: var(--col-academic); text-shadow: none; }
-        .cv-company { font-style: italic; color: #aaa; font-size: 0.95rem; display: block; margin-bottom: 5px; text-shadow: none;}
-        .cv-list { padding-left: 20px; margin: 0; }
-        .cv-list li { margin-bottom: 4px; color: #ccc; font-size: 0.95rem; line-height: 1.4; text-shadow: none; }
-        .cv-skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; }
-        .skill-category { margin-bottom: 10px; }
-        .skill-title { font-size: 0.9rem; font-weight: 700; color: #fff; margin-bottom: 8px; display: block; text-shadow: none; }
-        .tag-container { display: flex; flex-wrap: wrap; gap: 8px; }
-        .tag { font-family: 'JetBrains Mono'; font-size: 0.75rem; padding: 4px 8px; border-radius: 4px; background: #222; border: 1px solid #444; color: #ddd; text-shadow: none; }
-        .tag.highlight { border-color: var(--col-academic); color: #fff; background: rgba(59, 130, 246, 0.2); }
-
-        /* Footer */
-        footer { margin-top: 10vh; padding: 4rem 2rem; background: linear-gradient(to top, #050505 0%, transparent 100%); border-top: 1px solid rgba(255, 255, 255, 0.05); text-align: center; position: relative; z-index: 2; pointer-events: auto; }
-        .footer-links { display: flex; justify-content: center; gap: 15px; margin: 30px 0; flex-wrap: wrap; }
-        .footer-btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 4px; color: var(--text-muted); text-decoration: none; font-size: 0.9rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s ease; backdrop-filter: blur(2px); }
-        .copyright { font-size: 0.8rem; color: #555; text-transform: uppercase; letter-spacing: 2px; }
-
-
-        /* ========================================= */
-        /* === RESPONSIVE DESIGN (SMARTPHONES) === */
-        /* ========================================= */
-        @media (max-width: 1024px) {
-            .hero-grid {
-                grid-template-columns: 1fr; /* Empile les cartes verticalement */
-                gap: 20px;
-            }
-            section {
-                padding: 4rem 3%; /* Réduit les marges latérales */
-            }
-        }
-
-        @media (max-width: 768px) {
-            /* Ajustements Layout Global */
-            h1 { font-size: 2.5rem; }
-            h2 { font-size: 1.4rem; flex-direction: column; align-items: flex-start; gap: 5px; }
-            .glass-card { padding: 1.5rem; /* Moins de padding interne pour gagner de la place */ border-radius: 16px; }
-            
-            /* Ajustements Hero */
-            .tech-stack-row { justify-content: center; gap: 15px; }
-            .tech-icon { font-size: 2rem; }
-            
-            /* Ajustements GitHub Feed */
-            .github-feed-card { height: 350px; /* Moins haut sur mobile */ }
-            
-            /* Ajustements Boutons */
-            .cv-actions { flex-direction: column; width: 100%; }
-            .btn-cv, .footer-btn { width: 100%; }
-            
-            /* Ajustements Modal CV */
-            .cv-document-wrapper { height: 100%; width: 100%; max-width: 100%; border-radius: 0; border: none; }
-            .cv-scroll-area { padding: 20px 15px; }
-            .cv-top-header { flex-direction: column; gap: 15px; }
-            .cv-contact { text-align: left; }
-            
-            /* Navigation Footer */
-            .section-nav { flex-direction: column; }
-            
-            /* Audio Toggle moins intrusif */
-            #audio-toggle { width: 40px; height: 40px; bottom: 20px; right: 20px; font-size: 1rem; }
-        }
-    </style>
+    <!-- Feuille de style principale -->
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
+    <!-- Conteneur pour la scène Three.js (Arrière-plan) -->
     <div id="canvas-container"></div>
 
-    <!-- AUDIO TOGGLE -->
+    <!-- Contrôleur Audio (Mute/Unmute) -->
     <div id="audio-toggle" class="muted" title="Activer/Désactiver le son">🔇</div>
 
-    <!-- MODALE CV -->
+    <!-- MODALE : Aperçu du CV -->
     <div id="cv-modal" class="modal-overlay">
         <div class="cv-document-wrapper">
             <div class="cv-header-toolbar">
-                <span style="color:#aaa; font-family:'JetBrains Mono'; font-size:0.8rem;">Aperçu CV</span>
-                <div style="display:flex; gap:10px;">
-                    <button id="print-html-btn" class="btn-cv" style="height:auto; padding:6px 12px; font-size:0.7rem; background:#333; border:1px solid #555;">🖨️ Imprimer</button>
-                    <button id="close-modal-btn" style="background:none; border:none; color:white; font-size:1.5rem; cursor:pointer; padding:0 10px;">✕</button>
+                <span class="toolbar-title">Aperçu CV</span>
+                <div class="toolbar-actions">
+                    <button id="print-html-btn" class="btn-toolbar">🖨️ Imprimer</button>
+                    <button id="close-modal-btn" class="btn-close">✕</button>
                 </div>
             </div>
             <div class="cv-scroll-area" id="printable-area">
                 <div class="cv-container">
+                    <!-- En-tête CV -->
                     <div class="cv-top-header">
-                        <div class="cv-name"><h1>Florent Leterme</h1><h2>Développeur Web & Logiciel</h2></div>
-                        <div class="cv-contact">37380 Reugny<br>06 88 68 59 70<br><a href="mailto:letermeflorent@gmail.com">letermeflorent@gmail.com</a><br><a href="https://github.com/LetermeFlorent" target="_blank">GitHub/LetermeFlorent</a><br>Permis B</div>
+                        <div class="cv-name">
+                            <h1>Florent Leterme</h1>
+                            <h2>Développeur Web & Logiciel</h2>
+                        </div>
+                        <div class="cv-contact">
+                            37380 Reugny<br>
+                            06 88 68 59 70<br>
+                            <a href="mailto:letermeflorent@gmail.com">letermeflorent@gmail.com</a><br>
+                            <a href="https://github.com/LetermeFlorent" target="_blank">GitHub/LetermeFlorent</a><br>
+                            Permis B
+                        </div>
                     </div>
+
+                    <!-- Expériences -->
                     <div class="cv-section-title">Expériences (Projets & Stages)</div>
-                    <div class="cv-entry"><div class="cv-entry-header"><span class="cv-job-title">Amélioration Intranet Médecins</span><span class="cv-date">2024 - 2025</span></div><span class="cv-company">CHU de Tours (Projet BTS)</span><ul class="cv-list"><li>Amélioration des fonctionnalités existantes et ajout de nouvelles features sur le site intranet des médecins.</li><li>Refonte UX/UI pour optimiser le parcours utilisateur.</li></ul></div>
-                    <div class="cv-entry"><div class="cv-entry-header"><span class="cv-job-title">Site Intranet du CHU</span><span class="cv-date">2023 - 2024</span></div><span class="cv-company">CHU de Tours (Projet BTS)</span><ul class="cv-list"><li>Analyse et refonte complète de l'intranet destiné aux médecins.</li><li>Correction des redirections, amélioration de la navigation et de l'ergonomie.</li><li>Travail en équipe (méthodes agiles simulées).</li></ul></div>
-                    <div class="cv-entry"><div class="cv-entry-header"><span class="cv-job-title">Simple Storage (App Gestion)</span><span class="cv-date">2023 - 2024</span></div><span class="cv-company">Projet BTS</span><ul class="cv-list"><li>Développement d'une application web de gestion de stock simple (CRUD) avec listing et ajout d'articles.</li><li>Utilisation de PHP, PostgreSQL, et HTML/CSS.</li><li>Intégration de la librairie <strong>FakerPHP</strong> pour la génération de données de test.</li></ul></div>
-                    <div class="cv-entry"><div class="cv-entry-header"><span class="cv-job-title">Site Web Lycée</span><span class="cv-date">2023 - 2024</span></div><span class="cv-company">Projet BTS</span><ul class="cv-list"><li>Participation au développement du site web du lycée en équipe de cinq.</li><li>Responsable de la création de pages fonctionnelles, esthétiques et conviviales.</li><li>Technologies : HTML, CSS, PHP (basique).</li></ul></div>
-                    <div class="cv-entry"><div class="cv-entry-header"><span class="cv-job-title">Stage Développeur</span><span class="cv-date">Loches, 2022 - 2023</span></div><span class="cv-company">PC4You</span><ul class="cv-list"><li>Mise à jour et maintenance du CRM <strong>Dolibarr</strong>.</li><li>Modification d'éléments sur un module de gestion de stock.</li></ul></div>
+                    
+                    <div class="cv-entry">
+                        <div class="cv-entry-header">
+                            <span class="cv-job-title">Amélioration Intranet Médecins</span>
+                            <span class="cv-date">2024 - 2025</span>
+                        </div>
+                        <span class="cv-company">CHU de Tours (Projet BTS)</span>
+                        <ul class="cv-list">
+                            <li>Amélioration des fonctionnalités existantes et ajout de nouvelles features.</li>
+                            <li>Refonte UX/UI pour optimiser le parcours utilisateur.</li>
+                        </ul>
+                    </div>
+
+                    <div class="cv-entry">
+                        <div class="cv-entry-header">
+                            <span class="cv-job-title">Site Intranet du CHU</span>
+                            <span class="cv-date">2023 - 2024</span>
+                        </div>
+                        <span class="cv-company">CHU de Tours (Projet BTS)</span>
+                        <ul class="cv-list">
+                            <li>Analyse et refonte complète de l'intranet destiné aux médecins.</li>
+                            <li>Correction des redirections et amélioration de l'ergonomie.</li>
+                            <li>Travail en équipe (méthodes agiles simulées).</li>
+                        </ul>
+                    </div>
+
+                    <div class="cv-entry">
+                        <div class="cv-entry-header">
+                            <span class="cv-job-title">Simple Storage (App Gestion)</span>
+                            <span class="cv-date">2023 - 2024</span>
+                        </div>
+                        <span class="cv-company">Projet BTS</span>
+                        <ul class="cv-list">
+                            <li>Développement d'une application web de gestion de stock simple (CRUD).</li>
+                            <li>Stack : PHP, PostgreSQL, HTML/CSS.</li>
+                            <li>Intégration de <strong>FakerPHP</strong> pour les données de test.</li>
+                        </ul>
+                    </div>
+
+                    <div class="cv-entry">
+                        <div class="cv-entry-header">
+                            <span class="cv-job-title">Stage Développeur</span>
+                            <span class="cv-date">Loches, 2022 - 2023</span>
+                        </div>
+                        <span class="cv-company">PC4You</span>
+                        <ul class="cv-list">
+                            <li>Mise à jour et maintenance du CRM <strong>Dolibarr</strong>.</li>
+                            <li>Modification de modules de gestion de stock.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Formation -->
                     <div class="cv-section-title">Formation</div>
-                    <div class="cv-entry" style="margin-bottom:10px; border:none; padding-left:0;"><div class="cv-entry-header"><span class="cv-job-title">BTS SIO SLAM</span><span class="cv-date">2025 (En cours)</span></div><span class="cv-company">Lycée Guy Chauvet, Loudun</span><p style="margin:0; font-size:0.9rem; color:#888;">Solutions Logicielles et Applications Métiers</p></div>
-                    <div class="cv-entry" style="margin-bottom:10px; border:none; padding-left:0;"><div class="cv-entry-header"><span class="cv-job-title">BAC STI2D SIN</span><span class="cv-date">2022</span></div><span class="cv-company">Lycée Jacques de Vaucanson, Tours</span><p style="margin:0; font-size:0.9rem; color:#888;">Systèmes d'Information et Numérique</p></div>
+                    <div class="cv-entry formation-entry">
+                        <div class="cv-entry-header">
+                            <span class="cv-job-title">BTS SIO SLAM (Diplôme Obtenu)</span>
+                            <span class="cv-date">2025</span>
+                        </div>
+                        <span class="cv-company">Lycée Guy Chauvet, Loudun</span>
+                        <p class="cv-desc">Solutions Logicielles et Applications Métiers</p>
+                    </div>
+
+                    <div class="cv-entry formation-entry">
+                        <div class="cv-entry-header">
+                            <span class="cv-job-title">BAC STI2D SIN</span>
+                            <span class="cv-date">2022</span>
+                        </div>
+                        <span class="cv-company">Lycée Jacques de Vaucanson, Tours</span>
+                        <p class="cv-desc">Systèmes d'Information et Numérique</p>
+                    </div>
+
+                    <!-- Compétences -->
                     <div class="cv-section-title">Compétences Techniques</div>
-                    <div class="cv-skills-grid"><div class="skill-category"><span class="skill-title">Langages</span><div class="tag-container"><span class="tag highlight">PHP</span><span class="tag highlight">Java</span><span class="tag">SQL</span><span class="tag">HTML5/CSS3</span></div></div><div class="skill-category"><span class="skill-title">Frameworks</span><div class="tag-container"><span class="tag highlight">PostgreSQL</span><span class="tag">MySQL</span><span class="tag">FakerPHP</span></div></div><div class="skill-category"><span class="skill-title">Outils</span><div class="tag-container"><span class="tag highlight">Git</span><span class="tag">VS Code</span><span class="tag">IntelliJ</span></div></div></div>
+                    <div class="cv-skills-grid">
+                        <div class="skill-category">
+                            <span class="skill-title">Langages</span>
+                            <div class="tag-container">
+                                <span class="tag highlight">PHP</span>
+                                <span class="tag highlight">Java</span>
+                                <span class="tag">SQL</span>
+                                <span class="tag">HTML5/CSS3</span>
+                            </div>
+                        </div>
+                        <div class="skill-category">
+                            <span class="skill-title">Frameworks & BDD</span>
+                            <div class="tag-container">
+                                <span class="tag highlight">PostgreSQL</span>
+                                <span class="tag">MySQL</span>
+                                <span class="tag">FakerPHP</span>
+                            </div>
+                        </div>
+                        <div class="skill-category">
+                            <span class="skill-title">Outils</span>
+                            <div class="tag-container">
+                                <span class="tag highlight">Git</span>
+                                <span class="tag">VS Code</span>
+                                <span class="tag">IntelliJ</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- CONTENU PRINCIPAL -->
     <main>
+        <!-- Section 1 : Hero & GitHub Feed -->
         <section id="hero">
             <div class="hero-grid">
-                <!-- CARD DE GAUCHE : Intro + Stack -->
+                <!-- Card Gauche : Présentation -->
                 <div class="glass-card">
-                    <span class="subtitle" style="color: var(--col-academic);">System Online</span>
-                    <h1>Florent Leterme</h1>
-                    <h2 style="font-weight: 300; color: #ddd;">Développeur <span style="color:white; font-weight:700;">Web</span> & <span style="color:white; font-weight:700;">Logiciel</span></h2>
-                    <p>Étudiant en BTS SIO SLAM. Rigueur académique le jour, expérimentations techniques la nuit.</p>
+                    <span class="subtitle academic">System Online</span>
                     
-                    <!-- BARRE D'ICON ANIMÉE -->
+                    <!-- ID "dynamic-name" pour l'effet Hacker -->
+                    <h1 class="main-title" id="dynamic-name">Florent Leterme</h1>
+                    
+                    <h2 class="sub-title">Développeur <span class="highlight-w">Web</span> & <span class="highlight-w">Logiciel</span></h2>
+                    <p class="intro-text">Diplômé du BTS SIO SLAM. Rigueur académique le jour, expérimentations techniques la nuit.</p>
+                    
+                    <!-- Stack Technique Animée -->
                     <div class="tech-stack-row">
                         <i class="devicon-php-plain tech-icon" style="color: #a29bfe;" title="PHP"></i>
                         <i class="devicon-java-plain tech-icon" style="color: #fab1a0;" title="Java"></i>
@@ -357,76 +181,53 @@
                         <i class="devicon-git-plain tech-icon" style="color: #ff7675;" title="Git"></i>
                     </div>
 
-                    <div class="cv-actions" style="border-top:none; margin-top:20px; padding-top:0;">
+                    <div class="cv-actions no-border-top">
                         <a href="#academic" class="btn-cv primary">Initialiser le Profil</a>
                     </div>
                 </div>
 
-                <!-- CARD DE DROITE : GitHub Feed -->
+                <!-- Card Droite : GitHub Live Feed -->
                 <div class="glass-card github-feed-card">
                     <div class="feed-header">
-                        <span class="subtitle" style="margin:0; font-size:0.7rem; color: var(--col-creative);">GH-DATALINK</span>
+                        <span class="subtitle creative small">GH-DATALINK</span>
                         <div class="live-indicator"><div class="blink-dot"></div> LIVE FEED</div>
                     </div>
                     
                     <div class="feed-container">
                         <div class="feed-track">
-                            <!-- Items dupliqués pour l'effet infini -->
+                            <!-- Liste des projets (Dupliqués pour scroll infini) -->
                             <div class="project-row">
                                 <span class="proj-name">Intranet CHU Tours</span>
-                                <div class="proj-meta">
-                                    <span>Amélioration UX/UI</span>
-                                    <span class="lang-badge l-php">PHP</span>
-                                </div>
+                                <div class="proj-meta"><span>UX/UI Refonte</span><span class="lang-badge l-php">PHP</span></div>
                             </div>
                             <div class="project-row">
                                 <span class="proj-name">Simple Storage</span>
-                                <div class="proj-meta">
-                                    <span>Gestion Stock CRUD</span>
-                                    <span class="lang-badge l-sql">PostgreSQL</span>
-                                </div>
+                                <div class="proj-meta"><span>Gestion Stock</span><span class="lang-badge l-sql">PSQL</span></div>
                             </div>
                             <div class="project-row">
                                 <span class="proj-name">SpacePanel</span>
-                                <div class="proj-meta">
-                                    <span>Dashboard TR</span>
-                                    <span class="lang-badge l-js">Node.js</span>
-                                </div>
+                                <div class="proj-meta"><span>Dashboard TR</span><span class="lang-badge l-js">Node</span></div>
                             </div>
                             <div class="project-row">
                                 <span class="proj-name">LogoCreator</span>
-                                <div class="proj-meta">
-                                    <span>Générateur GUI</span>
-                                    <span class="lang-badge l-py">Python</span>
-                                </div>
+                                <div class="proj-meta"><span>Générateur GUI</span><span class="lang-badge l-py">Python</span></div>
                             </div>
-                            <div class="project-row">
-                                <span class="proj-name">Game Engine</span>
-                                <div class="proj-meta">
-                                    <span>Moteur 2D Canvas</span>
-                                    <span class="lang-badge l-js">JS</span>
-                                </div>
-                            </div>
-                            <!-- DUPLICATION -->
+                            <!-- Duplication pour boucle -->
                             <div class="project-row">
                                 <span class="proj-name">Intranet CHU Tours</span>
-                                <div class="proj-meta"><span>Refonte</span><span class="lang-badge l-php">PHP</span></div>
+                                <div class="proj-meta"><span>UX/UI Refonte</span><span class="lang-badge l-php">PHP</span></div>
                             </div>
                             <div class="project-row">
                                 <span class="proj-name">Simple Storage</span>
-                                <div class="proj-meta"><span>CRUD</span><span class="lang-badge l-sql">PostgreSQL</span></div>
+                                <div class="proj-meta"><span>Gestion Stock</span><span class="lang-badge l-sql">PSQL</span></div>
                             </div>
                             <div class="project-row">
                                 <span class="proj-name">SpacePanel</span>
-                                <div class="proj-meta"><span>Socket.io</span><span class="lang-badge l-js">Node.js</span></div>
+                                <div class="proj-meta"><span>Dashboard TR</span><span class="lang-badge l-js">Node</span></div>
                             </div>
                             <div class="project-row">
                                 <span class="proj-name">LogoCreator</span>
-                                <div class="proj-meta"><span>Tkinter</span><span class="lang-badge l-py">Python</span></div>
-                            </div>
-                             <div class="project-row">
-                                <span class="proj-name">Game Engine</span>
-                                <div class="proj-meta"><span>Render</span><span class="lang-badge l-js">JS</span></div>
+                                <div class="proj-meta"><span>Générateur GUI</span><span class="lang-badge l-py">Python</span></div>
                             </div>
                         </div>
                     </div>
@@ -434,15 +235,59 @@
             </div>
         </section>
 
+        <!-- Section 2 : Parcours Académique -->
         <section id="academic">
-            <div class="glass-card" style="width: 100%;">
-                <span class="subtitle" style="color: var(--col-academic);">Data Log: Professionnel</span>
+            <div class="glass-card full-width">
+                <span class="subtitle academic">Data Log: Professionnel</span>
                 <h2>🎓 Parcours & Compétences</h2>
+                
                 <div class="xp-grid">
-                    <div class="xp-item"><span class="xp-date">2023 - 2025</span><h3>CHU de Tours</h3><p style="font-size: 0.9rem;">Refonte Intranet Médecins (Agile).</p></div>
-                    <div class="xp-item"><span class="xp-date">Projet BTS</span><h3>Simple Storage</h3><p style="font-size: 0.9rem;">App Fullstack PHP/PostgreSQL.</p></div>
-                    <div class="xp-item"><span class="xp-date">Stack</span><h3>Technologies</h3><p style="font-size: 0.9rem; font-family:'JetBrains Mono'; color:#fff;">PHP • Java • SQL • Git</p></div>
+                    <!-- Item 1 -->
+                    <div class="xp-item academic-style">
+                        <div class="xp-header">
+                            <span class="xp-date">2023 - 2025</span>
+                            <span class="status-dot green"></span>
+                        </div>
+                        <h3>CHU de Tours</h3>
+                        <p class="xp-desc">Refonte Intranet Médecins.</p>
+                        <div class="xp-tags">
+                            <span>Agile</span>
+                            <span>UX/UI</span>
+                        </div>
+                    </div>
+
+                    <!-- Item 2 -->
+                    <div class="xp-item academic-style">
+                        <div class="xp-header">
+                            <span class="xp-date">Projet BTS</span>
+                            <span class="status-dot blue"></span>
+                        </div>
+                        <h3>Simple Storage</h3>
+                        <p class="xp-desc">App Fullstack Gestion.</p>
+                        <div class="xp-tags">
+                            <span>PHP</span>
+                            <span>PostgreSQL</span>
+                        </div>
+                    </div>
+
+                    <!-- Item 3 : Stack redesignée -->
+                    <div class="xp-item academic-style full-span-mobile">
+                        <div class="xp-header">
+                            <span class="xp-date">Core Stack</span>
+                            <i class="devicon-devicon-plain" style="font-size: 1rem; color: #fff;"></i>
+                        </div>
+                        <h3>Technologies</h3>
+                        <div class="tech-badges">
+                            <span class="t-badge">PHP</span>
+                            <span class="t-badge">Java</span>
+                            <span class="t-badge">SQL</span>
+                            <span class="t-badge">Git</span>
+                            <span class="t-badge">HTML/CSS</span>
+                            <span class="t-badge">VS Code</span>
+                        </div>
+                    </div>
                 </div>
+
                 <div class="cv-actions">
                     <a href="cv.pdf" download class="btn-cv primary">Download Data (PDF)</a>
                     <button id="open-modal-btn" class="btn-cv">View Source (HTML)</button>
@@ -455,17 +300,49 @@
             </div>
         </section>
 
+        <!-- Section 3 : Projets Perso -->
         <section id="creative">
-            <div class="glass-card" style="border-top: 1px solid var(--col-creative); width: 100%;">
-                <span class="subtitle" style="color: var(--col-creative);">Labo Expérimental</span>
+            <div class="glass-card full-width border-creative">
+                <span class="subtitle creative">Labo Expérimental</span>
                 <h2>🧪 Projets @Dreyka-Oas</h2>
                 <p>Développement moteurs de jeux, outils systèmes et interfaces.</p>
+                
                 <div class="xp-grid">
-                    <div class="xp-item"><h3>SpacePanel</h3><p style="font-size: 0.9rem;">Dashboard Node.js/Socket.io TR.</p></div>
-                    <div class="xp-item"><h3>LogoCreator</h3><p style="font-size: 0.9rem;">Python GUI Generator.</p></div>
-                    <div class="xp-item"><h3>Game Dev</h3><p style="font-size: 0.9rem;">JS Canvas Engine.</p></div>
+                    <!-- Creative Item 1 -->
+                    <div class="xp-item creative-style">
+                        <div class="xp-header">
+                            <span class="xp-type">Dashboard</span>
+                            <span class="version">v2.0</span>
+                        </div>
+                        <h3>SpacePanel</h3>
+                        <p class="xp-desc">Panel Admin Node.js/Socket.io TR.</p>
+                        <div class="progress-bar"><div class="fill" style="width: 90%"></div></div>
+                    </div>
+
+                    <!-- Creative Item 2 -->
+                    <div class="xp-item creative-style">
+                        <div class="xp-header">
+                            <span class="xp-type">Tool</span>
+                            <span class="version">v1.5</span>
+                        </div>
+                        <h3>LogoCreator</h3>
+                        <p class="xp-desc">Générateur GUI Python Tkinter.</p>
+                        <div class="progress-bar"><div class="fill" style="width: 100%"></div></div>
+                    </div>
+
+                    <!-- Creative Item 3 -->
+                    <div class="xp-item creative-style">
+                        <div class="xp-header">
+                            <span class="xp-type">Engine</span>
+                            <span class="version">Alpha</span>
+                        </div>
+                        <h3>Game Dev</h3>
+                        <p class="xp-desc">Moteur 2D JS Canvas Custom.</p>
+                        <div class="progress-bar"><div class="fill" style="width: 60%"></div></div>
+                    </div>
                 </div>
-                <div class="cv-actions" style="border-top: none; margin-top: 35px; padding-top: 0;">
+
+                <div class="cv-actions no-border-top padding-top-small">
                     <a href="https://github.com/Dreyka-Oas" target="_blank" class="btn-cv github-exp">GitHub Expérimental</a>
                 </div>
                 <div class="section-nav">
@@ -476,9 +353,10 @@
         </section>
     </main>
 
+    <!-- Pied de page -->
     <footer>
         <div class="footer-content">
-            <h3 style="opacity: 0.7;">Florent Leterme</h3>
+            <h3 class="footer-name">Florent Leterme</h3>
             <div class="footer-links">
                 <a href="https://www.linkedin.com/in/leterme-florent/" target="_blank" class="footer-btn">LinkedIn</a>
                 <a href="https://github.com/LetermeFlorent" target="_blank" class="footer-btn">GitHub Pro</a>
@@ -489,361 +367,15 @@
         </div>
     </footer>
 
+    <!-- Librairies Externes -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollToPlugin.min.js"></script>
 
-    <script>
-        // --- GLOBAL VARS ---
-        const modal = document.getElementById('cv-modal'); 
-        const body = document.body;
-        gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
-
-        // --- AUDIO SYSTEM (MP3) ---
-        const soundManager = {
-            enabled: false,
-            context: null,
-            sounds: {},
-            muted: true,
-            buffers: {},
-            
-            init: function() {
-                if (this.context) return true;
-                try {
-                    const AudioContext = window.AudioContext || window.webkitAudioContext;
-                    this.context = new AudioContext();
-                    this.loadAudioFiles();
-                    return true;
-                } catch (e) {
-                    console.warn("Audio non supporté:", e);
-                    return false;
-                }
-            },
-            
-            loadAudioFiles: function() {
-                const audioFiles = { ambience: 'ambience.mp3', explosion: 'explosion.mp3', flyby: 'flyby.mp3' };
-                const loadAudio = (name, url) => {
-                    return fetch(url)
-                        .then(response => response.arrayBuffer())
-                        .then(arrayBuffer => this.context.decodeAudioData(arrayBuffer))
-                        .then(audioBuffer => { this.buffers[name] = audioBuffer; })
-                        .catch(error => console.error(`Erreur chargement ${name}:`, error));
-                };
-                Promise.all([
-                    loadAudio('ambience', audioFiles.ambience),
-                    loadAudio('explosion', audioFiles.explosion),
-                    loadAudio('flyby', audioFiles.flyby)
-                ]);
-            },
-            
-            playSound: function(name, loop = false, volume = 1.0) {
-                if (!this.enabled || this.muted || !this.buffers[name]) return null;
-                try {
-                    const source = this.context.createBufferSource();
-                    const gainNode = this.context.createGain();
-                    source.buffer = this.buffers[name];
-                    source.loop = loop;
-                    gainNode.gain.value = volume;
-                    source.connect(gainNode);
-                    gainNode.connect(this.context.destination);
-                    source.start(0);
-                    return { source, gainNode };
-                } catch (e) { return null; }
-            },
-            
-            playAmbience: function() {
-                if (this.sounds.ambience) { this.sounds.ambience.source.stop(); }
-                this.sounds.ambience = this.playSound('ambience', true, 0.3);
-            },
-            
-            playExplosion: function() { this.playSound('explosion', false, 0.7); },
-            playFlyby: function() { this.playSound('flyby', false, 0.5); },
-            
-            enable: function() {
-                if (!this.context) { if (!this.init()) return false; }
-                if (this.context.state === 'suspended') { this.context.resume(); }
-                this.enabled = true;
-                this.muted = false;
-                if (this.buffers.ambience) { this.playAmbience(); } else { setTimeout(() => { if (this.buffers.ambience && this.enabled && !this.muted) this.playAmbience(); }, 1000); }
-                return true;
-            },
-            
-            toggleMute: function() {
-                if (!this.enabled || !this.context) { return !this.enable(); }
-                this.muted = !this.muted;
-                if (this.muted) { if (this.sounds.ambience) { try { this.sounds.ambience.source.stop(); } catch(e){} this.sounds.ambience = null; } } 
-                else { if (this.buffers.ambience) { this.playAmbience(); } }
-                return this.muted;
-            }
-        };
-
-        const muteBtn = document.getElementById('audio-toggle');
-        muteBtn.addEventListener('click', () => {
-            const isMuted = soundManager.toggleMute();
-            muteBtn.innerHTML = isMuted ? '🔇' : '🔊';
-            if (!isMuted) { muteBtn.classList.remove('muted'); } else { muteBtn.classList.add('muted'); }
-        });
-
-        // --- 3D SCENE SETUP ---
-        const container = document.getElementById('canvas-container');
-        const scene = new THREE.Scene();
-        scene.fog = new THREE.FogExp2(0x000000, 0.001); 
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        
-        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: "high-performance" });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-        container.appendChild(renderer.domElement);
-
-        const spaceGroup = new THREE.Group();
-        scene.add(spaceGroup);
-
-        // --- STARS ---
-        const starsGeo = new THREE.BufferGeometry();
-        const starsCnt = 600; 
-        const posArray = new Float32Array(starsCnt * 3);
-        for(let i = 0; i < starsCnt * 3; i += 3) {
-            posArray[i] = (Math.random() - 0.5) * 200;     
-            posArray[i + 1] = (Math.random() - 0.5) * 200; 
-            posArray[i + 2] = (Math.random() - 0.5) * 200; 
-        }
-        starsGeo.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-        const starsMat = new THREE.PointsMaterial({ color: 0xffffff, size: 0.15, transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending, sizeAttenuation: true });
-        const starMesh = new THREE.Points(starsGeo, starsMat);
-        scene.add(starMesh);
-
-        // --- SUN SYSTEM ---
-        const suns = []; 
-        const sunData = new Map(); 
-        let explosionCounter = 0;
-        let secondSunSpawned = false;
-        const shootingStars = [];
-        let lastShootingStarTime = 0;
-        const shootingStarInterval = 6000; 
-
-        function createSunTexture() {
-            const c = document.createElement('canvas'); c.width = 64; c.height = 64;
-            const ctx = c.getContext('2d');
-            const g = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
-            g.addColorStop(0, 'rgba(255,255,255,1)'); g.addColorStop(0.3, 'rgba(200,220,255,0.5)'); g.addColorStop(1, 'rgba(0,0,0,0)');
-            ctx.fillStyle = g; ctx.fillRect(0,0,64,64);
-            return new THREE.CanvasTexture(c);
-        }
-
-        function spawnSun(x, y, z, isMain) {
-            const sunMat = new THREE.SpriteMaterial({ map: createSunTexture(), color: 0xffffff, blending: THREE.AdditiveBlending, depthWrite: false, transparent: true });
-            const sun = new THREE.Sprite(sunMat); 
-            sun.scale.set(0.1, 0.1, 1); sun.position.set(x, y, z);
-            scene.add(sun); suns.push(sun);
-
-            const sunLight = new THREE.PointLight(0xffffff, 0.1, 200); 
-            sunLight.position.set(x, y, z + 10); scene.add(sunLight);
-
-            const shockSphereGeo = new THREE.SphereGeometry(1, 32, 32);
-            const shockSphereMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, side: THREE.BackSide, depthWrite: false });
-            const shockSphere = new THREE.Mesh(shockSphereGeo, shockSphereMat);
-            shockSphere.position.copy(sun.position); scene.add(shockSphere);
-
-            const instability = { lightIntensity: 2, baseScale: 80, pulseSpeed: 0.5 + Math.random() * 1.5, flickerSpeed: 2 + Math.random() * 3, colorShiftSpeed: 0.3 + Math.random() * 0.7, timeOffset: Math.random() * Math.PI * 2 };
-            sunData.set(sun.uuid, { light: sunLight, shock: shockSphere, isExploding: false, isMain: isMain, basePos: new THREE.Vector3(x, y, z), instability: instability, material: sunMat, shockWaveStartTime: 0 });
-
-            gsap.to(sun.scale, { x: 80, y: 80, duration: 8, ease: "power2.out" });
-            gsap.to(sunLight, { intensity: 2, duration: 8, ease: "power2.out" });
-        }
-
-        function createShootingStar() {
-            const geometry = new THREE.BufferGeometry();
-            const length = 3 + Math.random() * 2;
-            const vertices = new Float32Array([ 0, 0, 0, 0, -length, 0 ]);
-            geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
-            const material = new THREE.LineBasicMaterial({ color: new THREE.Color().setHSL(0.6, 0.8, 0.9), transparent: true, opacity: 1, blending: THREE.AdditiveBlending, linewidth: 3 });
-            const shootingStar = new THREE.Line(geometry, material);
-            const startX = (Math.random() - 0.5) * 150; const startY = 100 + Math.random() * 30; const startZ = -30 + (Math.random() - 0.5) * 20;
-            shootingStar.position.set(startX, startY, startZ); shootingStar.rotation.z = (Math.random() - 0.5) * Math.PI;
-            scene.add(shootingStar);
-            const duration = 2 + Math.random();
-            gsap.to(shootingStar.position, { x: startX + (Math.random() - 0.5) * 80, y: -100, z: startZ + (Math.random() - 0.5) * 40, duration: duration, ease: "power1.in", onComplete: () => { scene.remove(shootingStar); const index = shootingStars.indexOf(shootingStar); if (index > -1) { shootingStars.splice(index, 1); } } });
-            gsap.to(shootingStar.material, { opacity: 0, duration: duration * 0.6, delay: duration * 0.4 });
-            shootingStars.push(shootingStar);
-        }
-
-        spawnSun(50, 20, -60, true);
-
-        // STRUCTURE
-        const r1Geo = new THREE.TorusGeometry(12, 0.1, 16, 100); 
-        const r1Mat = new THREE.MeshBasicMaterial({ color: 0x3b82f6, wireframe: true, transparent: true, opacity: 0.15 });
-        const ring1 = new THREE.Mesh(r1Geo, r1Mat); spaceGroup.add(ring1);
-
-        const r2Geo = new THREE.TorusGeometry(9, 0.3, 16, 100);
-        const r2Mat = new THREE.PointsMaterial({ color: 0x3b82f6, size: 0.05, transparent: true, opacity: 0.4, blending: THREE.AdditiveBlending });
-        const ring2 = new THREE.Points(r2Geo, r2Mat); ring2.rotation.x = Math.PI / 1.5; spaceGroup.add(ring2);
-
-        camera.position.z = 10;
-
-        // INTERACTIVITY
-        const raycaster = new THREE.Raycaster();
-        const mouse = new THREE.Vector2();
-
-        // Mouse Move pour PC
-        window.addEventListener('mousemove', (event) => {
-            if (modal.style.display === 'flex') return;
-            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-            mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
-            raycaster.setFromCamera(mouse, camera);
-            const isHoveringCard = isEventOnInteractiveElement(event);
-            const intersects = raycaster.intersectObjects(suns);
-            if (intersects.length > 0 && !isHoveringCard) { document.body.style.cursor = 'pointer'; } else { document.body.style.cursor = 'default'; }
-        });
-
-        // Touch Move pour Mobile
-        window.addEventListener('touchmove', (event) => {
-             if (event.touches.length > 0) {
-                mouse.x = (event.touches[0].clientX / window.innerWidth) * 2 - 1;
-                mouse.y = - (event.touches[0].clientY / window.innerHeight) * 2 + 1;
-            }
-        }, {passive: true});
-
-
-        function isEventOnInteractiveElement(event) {
-            let target = event.target;
-            // Adaptation pour l'event touch
-            if(event.changedTouches && event.changedTouches.length > 0) target = document.elementFromPoint(event.changedTouches[0].clientX, event.changedTouches[0].clientY);
-            
-            while (target && target !== document.body) {
-                if (target.classList && (target.classList.contains('glass-card') || target.classList.contains('btn-cv') || target.classList.contains('tech-icon'))) { return true; }
-                target = target.parentElement;
-            }
-            return false;
-        }
-
-        const handleInteraction = (event) => {
-            if (modal.style.display === 'flex') return;
-            if (isEventOnInteractiveElement(event)) return;
-            
-            // Mise à jour coordonnées si c'est un touch
-            if (event.type === 'touchstart' || event.type === 'touchend') {
-                 mouse.x = (event.changedTouches[0].clientX / window.innerWidth) * 2 - 1;
-                 mouse.y = - (event.changedTouches[0].clientY / window.innerHeight) * 2 + 1;
-            } else {
-                 mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-                 mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
-            }
-
-            raycaster.setFromCamera(mouse, camera);
-            const intersects = raycaster.intersectObjects(suns);
-
-            if (intersects.length > 0) {
-                const hitSun = intersects[0].object;
-                const data = sunData.get(hitSun.uuid);
-
-                if (data && !data.isExploding) {
-                    data.isExploding = true; explosionCounter++;
-                    const shakeTl = gsap.timeline();
-                    shakeTl.to(hitSun.scale, { x: 5, y: 5, duration: 1.5, ease: "power2.in" });
-                    shakeTl.to(hitSun.material.color, { r: 1, g: 0, b: 0, duration: 1.5 }, 0); 
-
-                    setTimeout(() => {
-                        hitSun.scale.set(0,0,0); hitSun.material.color.setHex(0xffffff); 
-                        data.shock.material.opacity = 0.8; data.shock.scale.set(1,1,1);
-                        gsap.to(data.shock.scale, { x: 200, y: 200, z: 200, duration: 2, ease: "power2.out", onUpdate: function() { const currentScale = data.shock.scale.x; if (currentScale > 90 && currentScale < 110 && !data.explosionSoundPlayed) { if (soundManager.enabled && !soundManager.muted) { soundManager.playExplosion(); data.explosionSoundPlayed = true; } } } });
-                        gsap.to(data.shock.material, { opacity: 0, duration: 2, ease: "power2.out" });
-
-                        const cards = document.querySelectorAll('.glass-card, .xp-item');
-                        cards.forEach(card => {
-                            gsap.to(card, { x: (Math.random()-0.5)*60, y: (Math.random()-0.5)*60, duration: 0.1, yoyo: true, repeat: 5, onComplete: () => { gsap.to(card, { x: 0, y: 0, duration: 0.5 }); } });
-                        });
-
-                        gsap.to(camera.position, { x: "+=0.5", y: "+=0.5", duration: 0.05, yoyo: true, repeat: 15, onComplete: () => { camera.position.x = 0; camera.position.y = 0; } });
-                        gsap.to(spaceGroup.rotation, { z: "+=0.2", duration: 0.2, yoyo: true, repeat: 3 });
-
-                        if (data.isMain && explosionCounter === 3 && !secondSunSpawned) { setTimeout(() => { spawnSun(-50, 30, -70, false); secondSunSpawned = true; }, 1000); }
-                        setTimeout(() => { gsap.to(hitSun.scale, { x: 80, y: 80, duration: 6, ease: "elastic.out(1, 0.3)" }); data.isExploding = false; data.explosionSoundPlayed = false; }, 2500);
-
-                    }, 1500);
-                }
-            }
-        };
-
-        window.addEventListener('click', handleInteraction);
-        // Ajout support touch pour mobile sans délai
-        window.addEventListener('touchstart', handleInteraction, {passive: true});
-
-        const clock = new THREE.Clock();
-        function animate() {
-            const t = clock.getElapsedTime();
-            ring1.rotation.z = t * 0.05; ring1.rotation.x = Math.sin(t * 0.1) * 0.2;
-            ring2.rotation.y = t * 0.08; ring2.rotation.z = -t * 0.02;
-            starMesh.rotation.y = t * 0.005;
-
-            const currentTime = performance.now();
-            if (currentTime - lastShootingStarTime > shootingStarInterval) { createShootingStar(); lastShootingStarTime = currentTime; }
-
-            suns.forEach(sun => {
-                const data = sunData.get(sun.uuid);
-                if (data && !data.isExploding) {
-                    const instab = data.instability; const time = t + instab.timeOffset;
-                    const scaleVariation = Math.sin(time * instab.pulseSpeed) * 3;
-                    sun.scale.x = instab.baseScale + scaleVariation; sun.scale.y = instab.baseScale + scaleVariation;
-                    const flicker = 0.7 + 0.3 * Math.sin(time * instab.flickerSpeed);
-                    data.light.intensity = instab.lightIntensity * flicker;
-                    const colorShift = 0.9 + 0.1 * Math.sin(time * instab.colorShiftSpeed);
-                    data.material.color.setRGB(colorShift, colorShift, 1);
-                }
-            });
-            renderer.render(scene, camera);
-            requestAnimationFrame(animate);
-        }
-        animate();
-
-        // --- SCROLL LOGIC ---
-        let hasPlayedStructureSound = false;
-        const tl3d = gsap.timeline({ scrollTrigger: { 
-            trigger: "body", start: "top top", end: "bottom bottom", scrub: 1,
-            onUpdate: (self) => {
-                if (self.progress > 0.1 && !hasPlayedStructureSound && soundManager.enabled && !soundManager.muted) { soundManager.playFlyby(); hasPlayedStructureSound = true; }
-                if (self.progress < 0.05) { hasPlayedStructureSound = false; }
-            }
-        }});
-        
-        tl3d.to(spaceGroup.rotation, { x: 0.5, y: 0.5 }, 0);
-        tl3d.to(camera.position, { z: 6 }, 0); 
-        tl3d.to(ring1.material.color, { r: 168/255, g: 85/255, b: 247/255 }, 0);
-
-        document.querySelectorAll('.glass-card').forEach(card => {
-            gsap.to(card, { scrollTrigger: { trigger: card, start: "top 90%", end: "top 60%", scrub: 1 }, opacity: 1, scale: 1, y: 0, ease: "power2.out" });
-        });
-
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault(); const targetId = this.getAttribute('href'); if(targetId==='#')return;
-                gsap.to(window, { duration: 1.5, scrollTo: { y: targetId, autoKill: false }, ease: "power2.inOut" });
-            });
-        });
-
-        document.getElementById('open-modal-btn').addEventListener('click',()=>{
-            modal.style.display='flex'; body.style.overflow='hidden';
-            gsap.to(modal,{opacity:1,duration:0.3});
-            gsap.fromTo(".cv-document-wrapper",{scale:0.95,y:30},{scale:1,y:0,duration:0.4,ease:"back.out(1.2)"})
-        });
-        
-        const closeModal=()=>{ gsap.to(modal,{opacity:0,duration:0.3,onComplete:()=>{modal.style.display='none';body.style.overflow='auto'}}); };
-        document.getElementById('close-modal-btn').addEventListener('click',closeModal);
-        modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
-
-        document.getElementById('print-html-btn').addEventListener('click',()=>{
-            const c=document.getElementById('printable-area').innerHTML;
-            const w=window.open('','','height=600,width=800');
-            w.document.write(`<html><head><title>CV Florent Leterme</title><link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap" rel="stylesheet"><style>@page{size:A4;margin:0}body{font-family:'Helvetica',sans-serif;color:#000;padding:10mm;zoom:0.75}h1{font-size:2rem;margin-bottom:0}h2{font-size:1.2rem;color:#3b82f6;margin-top:5px}.cv-section-title{border-bottom:2px solid #3b82f6;margin:20px 0 10px;font-weight:bold;text-transform:uppercase}.cv-entry-header{display:flex;justify-content:space-between;font-weight:bold}.tag{border:1px solid #333;padding:2px 5px;border-radius:4px;display:inline-block;margin:2px;font-size:0.8rem;font-family:'JetBrains Mono'}.tag.highlight{background:#eee;border-color:#3b82f6}a{color:#000;text-decoration:none}ul{padding-left:20px}</style></head><body>${c}`);
-            w.document.close();
-            setTimeout(()=>{w.print();w.close()},500);
-        });
-
-        window.addEventListener('resize', () => { 
-            camera.aspect = window.innerWidth / window.innerHeight; 
-            camera.updateProjectionMatrix(); 
-            renderer.setSize(window.innerWidth, window.innerHeight); 
-        });
-    </script>
+    <!-- Scripts Personnalisés -->
+    <script src="scripts/audio-manager.js"></script>
+    <script src="scripts/scene-3d.js"></script>
+    <script src="scripts/main-ui.js"></script>
 </body>
 </html>
