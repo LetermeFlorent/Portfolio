@@ -415,7 +415,17 @@ footer {
 @media (max-width: 768px) {
     h1 { font-size: 2.5rem; }
     h2 { font-size: 1.4rem; flex-direction: column; align-items: flex-start; gap: 5px; }
-    .glass-card { padding: 1.5rem; border-radius: 24px; backdrop-filter: blur(20px); }
+    
+    /* MODIFICATION : Transparence accrue sur mobile pour voir la 3D */
+    .glass-card { 
+        padding: 1.5rem; 
+        border-radius: 24px; 
+        backdrop-filter: blur(20px);
+        background: rgba(0, 0, 0, 0.02) !important; /* Très transparent */
+        border: 1px solid rgba(255,255,255,0.1);
+        box-shadow: none; /* Moins d'ombre pour plus de clarté */
+    }
+
     .tech-stack-row { justify-content: center; gap: 15px; }
     .tech-icon { font-size: 2rem; }
     .github-feed-card { height: 350px; }
@@ -427,4 +437,9 @@ footer {
     #audio-toggle { width: 40px; height: 40px; bottom: 20px; right: 20px; font-size: 1rem; }
     
     .xp-item.full-span-mobile { grid-column: 1 / -1; }
+    
+    /* Item XP aussi transparent */
+    .xp-item {
+        background: rgba(0,0,0,0.1);
+    }
 }

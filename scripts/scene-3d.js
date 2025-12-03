@@ -11,7 +11,18 @@
     scene.fog = new THREE.FogExp2(0x000000, 0.001); 
     
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.z = 10;
+    
+    // --- GESTION CAMERA RESPONSIVE ---
+    // Sur mobile (portrait), on recule la caméra pour voir les anneaux en entier
+    // sinon ils sont coupés par la largeur de l'écran.
+    function updateCameraPosition() {
+        const isMobile = window.innerWidth < 768;
+        // PC : z=10 | Mobile : z=18 (plus de recul)
+        return isMobile ? 18 : 10;
+    }
+    
+    // Initialisation position
+    camera.position.z = updateCameraPosition();
 
     const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: "high-performance" });
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -20,6 +31,11 @@
 
     const spaceGroup = new THREE.Group();
     scene.add(spaceGroup);
+    
+    // Ajustement de l'échelle sur mobile pour que ça soit "imposant"
+    if (window.innerWidth < 768) {
+        spaceGroup.scale.set(1.2, 1.2, 1.2);
+    }
 
     // --- 2. FOND ETOILÉ (Fixe) ---
     const starsGeo = new THREE.BufferGeometry();
@@ -231,45 +247,36 @@
     window.addEventListener('click', handleInteraction);
     window.addEventListener('touchstart', handleInteraction, {passive: true});
 
-    // --- 6. LOGIQUE ETOILES FILANTES (CORRIGÉE) ---
+    // --- 6. LOGIQUE ETOILES FILANTES ---
     const clock = new THREE.Clock();
     const shootingStars = [];
     let lastShootingStarTime = 0;
     let nextShootingStarDelay = Math.random() * 1500 + 500; 
 
     function createShootingStar() {
-        // 1. Position de départ aléatoire LOIN dans l'espace (Z entre -200 et -400)
-        // et sur un large rayon X/Y
         const startX = (Math.random() - 0.5) * 600;
         const startY = (Math.random() - 0.5) * 400;
-        const startZ = -200 - Math.random() * 200; // Très loin derrière les anneaux
+        const startZ = -200 - Math.random() * 200; 
         
-        // 2. Vecteur de direction aléatoire (3D)
         const dirX = (Math.random() - 0.5);
         const dirY = (Math.random() - 0.5); 
-        const dirZ = (Math.random() - 0.2); // Légère tendance à avancer ou reculer
+        const dirZ = (Math.random() - 0.2); 
         const direction = new THREE.Vector3(dirX, dirY, dirZ).normalize();
 
-        // 3. Géométrie : Une ligne
-        // Pour faire une "queue", on utilise les Vertex Colors : Tête Opaque -> Queue Transparente
-        const starLen = 40; // Longueur de la traînée
+        const starLen = 40; 
         const geometry = new THREE.BufferGeometry();
         
-        // Points : Queue (0,0,0) -> Tête (le long de la direction)
         const vertices = new Float32Array([
-            0, 0, 0, // Queue
-            direction.x * starLen, direction.y * starLen, direction.z * starLen // Tête
+            0, 0, 0, 
+            direction.x * starLen, direction.y * starLen, direction.z * starLen 
         ]);
         
-        // Couleurs (R, G, B, Alpha) - Note: LineBasicMaterial gère mal l'alpha par vertex
-        // Astuce : On utilise la couleur noire pour "effacer" ou on accepte une ligne unie qui fade globalement
-        // Ici on va utiliser un matériau transparent global qui va fader
         geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
 
         const material = new THREE.LineBasicMaterial({
-            color: new THREE.Color().setHSL(0.6, 0.8, 0.8), // Bleu ciel / Blanc
+            color: new THREE.Color().setHSL(0.6, 0.8, 0.8), 
             transparent: true,
-            opacity: 0, // Commence invisible
+            opacity: 0, 
             blending: THREE.AdditiveBlending
         });
 
@@ -277,14 +284,11 @@
         star.position.set(startX, startY, startZ);
         scene.add(star);
 
-        // 4. Animation
-        const speed = 100 + Math.random() * 100; // Vitesse rapide
-        const duration = 2 + Math.random(); // Durée de vie
+        const speed = 100 + Math.random() * 100; 
+        const duration = 2 + Math.random(); 
 
-        // Apparition (Fade In)
         gsap.to(material, { opacity: 0.8, duration: 0.3 });
 
-        // Mouvement (On déplace tout l'objet le long du vecteur direction)
         gsap.to(star.position, {
             x: startX + direction.x * speed * duration,
             y: startY + direction.y * speed * duration,
@@ -298,7 +302,6 @@
             }
         });
 
-        // Disparition (Fade Out) à la fin
         gsap.to(material, { opacity: 0, duration: 0.5, delay: duration - 0.5 });
         
         shootingStars.push(star);
@@ -353,7 +356,18 @@
     window.addEventListener('resize', () => { 
         camera.aspect = window.innerWidth / window.innerHeight; 
         camera.updateProjectionMatrix(); 
-        renderer.setSize(window.innerWidth, window.innerHeight); 
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        
+        // Mise à jour de la position caméra Responsive
+        // On remet la caméra à jour si on passe du mode portrait au mode paysage
+        camera.position.z = updateCameraPosition();
+        
+        // Mise à jour de l'échelle des objets
+        if (window.innerWidth < 768) {
+            spaceGroup.scale.set(1.2, 1.2, 1.2);
+        } else {
+            spaceGroup.scale.set(1, 1, 1);
+        }
     });
 
     window.spaceGroup = spaceGroup;

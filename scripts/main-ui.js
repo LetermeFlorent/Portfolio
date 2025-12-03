@@ -186,7 +186,18 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (window.spaceGroup) {
                     window.spaceGroup.rotation.x = self.progress * 0.2; // Rotation légère au scroll
                 }
-                if (window.camera3D) window.camera3D.position.z = 10 - (self.progress * 4);
+                
+                // --- GESTION CAMERA RESPONSIVE DANS L'ANIMATION ---
+                // On détecte la largeur pour savoir de quel Z partir
+                if (window.camera3D) {
+                    const isMobile = window.innerWidth < 768;
+                    // Base Z : 18 pour mobile, 10 pour PC (correspond à scene-3d.js)
+                    const baseZ = isMobile ? 18 : 10;
+                    
+                    // On rapproche la caméra au scroll, mais en partant de la bonne base
+                    window.camera3D.position.z = baseZ - (self.progress * 4);
+                }
+
                 if (window.ring1) {
                     window.ring1.material.color.r = 0.23 + (self.progress * 0.42); 
                 }
