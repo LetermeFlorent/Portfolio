@@ -169,6 +169,9 @@ document.addEventListener("DOMContentLoaded", () => {
     // --- Animations GSAP ScrollTrigger ---
     let hasPlayedStructureSound = false;
     
+    // Correction : On ne crée la timeline 3D que si on n'est PAS sur mobile
+    // ou plus précisément, on vérifie dans le onUpdate que les objets existent.
+    
     const tl3d = gsap.timeline({
         scrollTrigger: { 
             trigger: "body", 
@@ -176,26 +179,20 @@ document.addEventListener("DOMContentLoaded", () => {
             end: "bottom bottom", 
             scrub: 1,
             onUpdate: (self) => {
+                // Audio : Jouer le son même sur mobile si possible (via audio-manager)
                 if (self.progress > 0.1 && !hasPlayedStructureSound && window.soundManager && window.soundManager.enabled && !window.soundManager.muted) {
                     window.soundManager.playFlyby();
                     hasPlayedStructureSound = true;
                 }
                 if (self.progress < 0.05) { hasPlayedStructureSound = false; }
                 
-                // Animation manuelle des objets 3D (Fallback si scene-3d n'a pas sa propre boucle ou pour synchroniser)
+                // Animation 3D : SEULEMENT SI LES OBJETS EXISTENT (Donc PC uniquement)
                 if (window.spaceGroup) {
-                    window.spaceGroup.rotation.x = self.progress * 0.2; // Rotation légère au scroll
+                    window.spaceGroup.rotation.x = self.progress * 0.2; 
                 }
                 
-                // --- GESTION CAMERA RESPONSIVE DANS L'ANIMATION ---
-                // On détecte la largeur pour savoir de quel Z partir
                 if (window.camera3D) {
-                    const isMobile = window.innerWidth < 768;
-                    // Base Z : 18 pour mobile, 10 pour PC (correspond à scene-3d.js)
-                    const baseZ = isMobile ? 18 : 10;
-                    
-                    // On rapproche la caméra au scroll, mais en partant de la bonne base
-                    window.camera3D.position.z = baseZ - (self.progress * 4);
+                    window.camera3D.position.z = 10 - (self.progress * 4);
                 }
 
                 if (window.ring1) {
