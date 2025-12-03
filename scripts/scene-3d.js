@@ -3,40 +3,48 @@
    ========================================================================== */
 
 (function() {
+    // --- DETECTION MOBILE ---
+    // On définit isMobile une fois pour toutes au début pour configurer la scène
+    let isMobile = window.innerWidth < 768;
+
     // --- 1. CONFIGURATION DE BASE ---
     const container = document.getElementById('canvas-container');
     const scene = new THREE.Scene();
     
-    // Brouillard noir pour fondre le lointain
     scene.fog = new THREE.FogExp2(0x000000, 0.001); 
     
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     
-    // --- GESTION CAMERA RESPONSIVE ---
-    function updateCameraPosition() {
-        const isMobile = window.innerWidth < 768;
-        // PC : z=10 | Mobile : z=18 (plus de recul)
-        return isMobile ? 18 : 10;
-    }
-    
-    camera.position.z = updateCameraPosition();
+    // Position Caméra Initiale
+    camera.position.z = isMobile ? 18 : 10;
 
-    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: "high-performance" });
+    // OPTIMISATION RENDU :
+    // Sur mobile, on désactive l'antialias pour gagner des FPS
+    const renderer = new THREE.WebGLRenderer({ 
+        alpha: true, 
+        antialias: !isMobile, // Antialias OFF sur mobile
+        powerPreference: "high-performance" 
+    });
+    
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    
+    // OPTIMISATION DPI : 
+    // Sur mobile, on force le pixelRatio à 1 maximum (évite de calculer 3x ou 4x pixels sur les écrans rétina)
+    renderer.setPixelRatio(isMobile ? 1 : Math.min(window.devicePixelRatio, 2));
+    
     container.appendChild(renderer.domElement);
 
     const spaceGroup = new THREE.Group();
     scene.add(spaceGroup);
     
-    // Ajustement de l'échelle sur mobile
-    if (window.innerWidth < 768) {
+    if (isMobile) {
         spaceGroup.scale.set(1.2, 1.2, 1.2);
     }
 
-    // --- 2. FOND ETOILÉ (Fixe) ---
+    // --- 2. FOND ETOILÉ (Optimisé) ---
     const starsGeo = new THREE.BufferGeometry();
-    const starsCnt = 1000; 
+    // Moins d'étoiles sur mobile pour soulager le vertex shader
+    const starsCnt = isMobile ? 500 : 1000; 
     const posArray = new Float32Array(starsCnt * 3);
     
     for(let i = 0; i < starsCnt * 3; i += 3) {
@@ -53,24 +61,36 @@
     const starMesh = new THREE.Points(starsGeo, starsMat);
     scene.add(starMesh);
 
-    // --- 3. STRUCTURE CENTRALE (GYROSCOPE 4 ANNEAUX) ---
-    const r1Geo = new THREE.TorusGeometry(12, 0.1, 16, 100); 
+    // --- 3. STRUCTURE CENTRALE (Géométrie adaptative) ---
+    // Sur mobile, on réduit le nombre de segments (radialSegments, tubularSegments)
+    // Ex: TorusGeometry(radius, tube, radialSegments, tubularSegments)
+    
+    const segRadial = isMobile ? 8 : 16;
+    const segTubular = isMobile ? 50 : 100;
+
+    // Ring 1
+    const r1Geo = new THREE.TorusGeometry(12, 0.1, segRadial, segTubular); 
     const r1Mat = new THREE.MeshBasicMaterial({ color: 0x3b82f6, wireframe: true, transparent: true, opacity: 0.2 });
     const ring1 = new THREE.Mesh(r1Geo, r1Mat);
     spaceGroup.add(ring1);
 
-    const r2Geo = new THREE.TorusGeometry(9, 0.3, 16, 100);
+    // Ring 2
+    const r2Geo = new THREE.TorusGeometry(9, 0.3, segRadial, segTubular);
     const r2Mat = new THREE.PointsMaterial({ color: 0x3b82f6, size: 0.05, transparent: true, opacity: 0.5, blending: THREE.AdditiveBlending });
     const ring2 = new THREE.Points(r2Geo, r2Mat);
     ring2.rotation.x = Math.PI / 1.5;
     spaceGroup.add(ring2);
 
-    const r3Geo = new THREE.RingGeometry(15.5, 15.6, 64);
+    // Ring 3 (Scanner)
+    // RingGeometry(inner, outer, thetaSegments)
+    const r3Segments = isMobile ? 32 : 64;
+    const r3Geo = new THREE.RingGeometry(15.5, 15.6, r3Segments);
     const r3Mat = new THREE.MeshBasicMaterial({ color: 0x60a5fa, side: THREE.DoubleSide, transparent: true, opacity: 0.3 });
     const ring3 = new THREE.Mesh(r3Geo, r3Mat);
     spaceGroup.add(ring3);
 
-    const r5Geo = new THREE.TorusGeometry(18, 0.1, 3, 6); 
+    // Ring 5 (Cage Violette)
+    const r5Geo = new THREE.TorusGeometry(18, 0.1, 3, 6); // Low poly par nature
     const r5Mat = new THREE.MeshBasicMaterial({ color: 0xa855f7, wireframe: true, transparent: true, opacity: 0.2 });
     const ring5 = new THREE.Mesh(r5Geo, r5Mat);
     spaceGroup.add(ring5);
@@ -95,8 +115,9 @@
     }
 
     function spawnSun(x, y, z, isMain) {
-        const isMobile = window.innerWidth < 768; // Vérification Mobile
-
+        // Pas de création de ressources soleils si on est sur mobile
+        // (Sauf si on veut pouvoir redimensionner, mais ici on optimise à fond)
+        
         const sunMat = new THREE.SpriteMaterial({ 
             map: createSunTexture(), color: 0xffffff, 
             blending: THREE.AdditiveBlending, depthWrite: false, transparent: true 
@@ -105,7 +126,7 @@
         sun.scale.set(0.1, 0.1, 1); 
         sun.position.set(x, y, z);
         
-        // MODIF: Visibilité conditionnelle dès la création
+        // Visibilité Initiale
         sun.visible = !isMobile;
 
         scene.add(sun);
@@ -113,10 +134,7 @@
 
         const sunLight = new THREE.PointLight(0xffffff, 0.1, 200); 
         sunLight.position.set(x, y, z + 10);
-        
-        // MODIF: Lumière visible uniquement sur PC
         sunLight.visible = !isMobile;
-        
         scene.add(sunLight);
 
         const shockSphereGeo = new THREE.SphereGeometry(1, 32, 32);
@@ -126,10 +144,7 @@
         });
         const shockSphere = new THREE.Mesh(shockSphereGeo, shockSphereMat);
         shockSphere.position.copy(sun.position);
-        
-        // MODIF: Onde de choc visible uniquement sur PC
         shockSphere.visible = !isMobile;
-
         scene.add(shockSphere);
 
         const instability = {
@@ -148,13 +163,12 @@
         gsap.to(sunLight, { intensity: 2, duration: 8, ease: "power2.out" });
     }
 
-    // MODIF: Fonction pour mettre à jour la visibilité de TOUS les soleils existants
+    // Mise à jour globale de la visibilité des soleils
     function updateSunsVisibility() {
-        const isMobile = window.innerWidth < 768;
+        // isMobile est mis à jour dans le listener resize
         suns.forEach(sun => {
             const data = sunData.get(sun.uuid);
             if(data) {
-                // On cache ou affiche le sprite, la lumière et l'onde de choc
                 sun.visible = !isMobile;
                 data.light.visible = !isMobile;
                 data.shock.visible = !isMobile;
@@ -190,13 +204,13 @@
     };
 
     window.addEventListener('mousemove', (event) => {
-        if (window.innerWidth < 768) return; // Pas de curseur interactif sur mobile (puisque pas de soleil)
+        if (isMobile) return; // Optimisation CPU : pas de raycasting sur mobile
         if (document.getElementById('cv-modal').style.display === 'flex') return;
         
         updateMouse(event.clientX, event.clientY);
         raycaster.setFromCamera(mouse, camera);
         const isHoveringCard = isEventOnInteractiveElement(event);
-        const intersects = raycaster.intersectObjects(suns); // Raycaster ignore automatiquement les objets invisibles
+        const intersects = raycaster.intersectObjects(suns); 
         
         if (intersects.length > 0 && !isHoveringCard) { 
             document.body.style.cursor = 'pointer'; 
@@ -206,7 +220,7 @@
     });
 
     const handleInteraction = (event) => {
-        if (window.innerWidth < 768) return; // Pas d'interaction sur mobile
+        if (isMobile) return; // Stop interaction mobile
         if (document.getElementById('cv-modal').style.display === 'flex') return;
         if (isEventOnInteractiveElement(event)) return;
         
@@ -221,7 +235,6 @@
         updateMouse(clientX, clientY);
         raycaster.setFromCamera(mouse, camera);
         
-        // Raycaster ne touchera pas les soleils si sun.visible = false
         const intersects = raycaster.intersectObjects(suns);
 
         if (intersects.length > 0) {
@@ -364,22 +377,24 @@
         }
 
         // Animation Soleils (seulement si visibles)
-        suns.forEach(sun => {
-            if (!sun.visible) return; // Optimisation : pas de calcul si invisible
-            
-            const data = sunData.get(sun.uuid);
-            if (data && !data.isExploding) {
-                const instab = data.instability;
-                const time = t + instab.timeOffset;
-                const scaleVariation = Math.sin(time * instab.pulseSpeed) * 3;
-                sun.scale.x = instab.baseScale + scaleVariation;
-                sun.scale.y = instab.baseScale + scaleVariation;
-                const flicker = 0.7 + 0.3 * Math.sin(time * instab.flickerSpeed);
-                data.light.intensity = instab.lightIntensity * flicker;
-                const colorShift = 0.9 + 0.1 * Math.sin(time * instab.colorShiftSpeed);
-                data.material.color.setRGB(colorShift, colorShift, 1);
-            }
-        });
+        if (!isMobile) {
+            suns.forEach(sun => {
+                if (!sun.visible) return; 
+                
+                const data = sunData.get(sun.uuid);
+                if (data && !data.isExploding) {
+                    const instab = data.instability;
+                    const time = t + instab.timeOffset;
+                    const scaleVariation = Math.sin(time * instab.pulseSpeed) * 3;
+                    sun.scale.x = instab.baseScale + scaleVariation;
+                    sun.scale.y = instab.baseScale + scaleVariation;
+                    const flicker = 0.7 + 0.3 * Math.sin(time * instab.flickerSpeed);
+                    data.light.intensity = instab.lightIntensity * flicker;
+                    const colorShift = 0.9 + 0.1 * Math.sin(time * instab.colorShiftSpeed);
+                    data.material.color.setRGB(colorShift, colorShift, 1);
+                }
+            });
+        }
 
         renderer.render(scene, camera);
         requestAnimationFrame(animate);
@@ -387,21 +402,25 @@
     animate();
 
     window.addEventListener('resize', () => { 
+        isMobile = window.innerWidth < 768;
+
         camera.aspect = window.innerWidth / window.innerHeight; 
         camera.updateProjectionMatrix(); 
         renderer.setSize(window.innerWidth, window.innerHeight);
         
         // Update Camera responsive
-        camera.position.z = updateCameraPosition();
+        camera.position.z = isMobile ? 18 : 10;
         
-        // MODIF: Mise à jour visibilité soleils
+        // Update Visibilité Soleils
         updateSunsVisibility();
         
         // Update Echelle
-        if (window.innerWidth < 768) {
+        if (isMobile) {
             spaceGroup.scale.set(1.2, 1.2, 1.2);
+            renderer.setPixelRatio(1); // Force perf
         } else {
             spaceGroup.scale.set(1, 1, 1);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         }
     });
 

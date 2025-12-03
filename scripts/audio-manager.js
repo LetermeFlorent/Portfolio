@@ -3,14 +3,14 @@
    Gère l'AudioContext, le chargement des buffers et la lecture des sons.
    ========================================================================== */
 
-// MODIFICATION ICI : On attache directement à window pour que main-ui.js puisse le voir
 window.soundManager = {
     enabled: false,
     context: null,
     sounds: {},
     muted: true, // Muet par défaut
     buffers: {},
-    
+    unlocked: false, // Nouvel état pour mobile
+
     // Initialisation du contexte Audio
     init: function() {
         if (this.context) return true;
@@ -20,10 +20,55 @@ window.soundManager = {
             this.context = new AudioContext();
             this.loadAudioFiles();
             console.log("🔊 Système audio initialisé (Context created)");
+            
+            // Correction Mobile : On attache le déverrouillage au premier touché
+            this.attachUnlockEvents();
+            
             return true;
         } catch (e) {
             console.warn("❌ Audio API non supportée:", e);
             return false;
+        }
+    },
+
+    // Unlock Audio Context pour Mobile (iOS/Android)
+    unlockAudio: function() {
+        if (this.unlocked || !this.context) return;
+
+        // On essaie de reprendre le contexte
+        if (this.context.state === 'suspended') {
+            this.context.resume().then(() => {
+                console.log("🔊 AudioContext Resumed (Mobile Unlock)");
+                this.unlocked = true;
+                
+                // Si on n'est pas censé être muet, on lance l'ambiance maintenant
+                if (!this.muted && this.buffers.ambience) {
+                    this.playAmbience();
+                }
+                
+                // Nettoyage des événements une fois déverrouillé
+                this.removeUnlockEvents();
+            });
+        } else {
+            this.unlocked = true;
+            this.removeUnlockEvents();
+        }
+    },
+
+    attachUnlockEvents: function() {
+        const unlockHandler = () => this.unlockAudio();
+        document.addEventListener('touchstart', unlockHandler, { passive: true });
+        document.addEventListener('click', unlockHandler, { passive: true });
+        document.addEventListener('keydown', unlockHandler, { passive: true });
+        this.unlockHandler = unlockHandler; // Stockage pour suppression
+    },
+
+    removeUnlockEvents: function() {
+        if(this.unlockHandler) {
+            document.removeEventListener('touchstart', this.unlockHandler);
+            document.removeEventListener('click', this.unlockHandler);
+            document.removeEventListener('keydown', this.unlockHandler);
+            this.unlockHandler = null;
         }
     },
     
@@ -60,6 +105,11 @@ window.soundManager = {
     playSound: function(name, loop = false, volume = 1.0) {
         if (!this.enabled || this.muted || !this.buffers[name]) return null;
         
+        // Vérification état contexte
+        if (this.context.state === 'suspended') {
+            this.context.resume();
+        }
+
         try {
             const source = this.context.createBufferSource();
             const gainNode = this.context.createGain();
@@ -81,6 +131,7 @@ window.soundManager = {
     
     // Méthodes spécifiques
     playAmbience: function() {
+        // Stop s'il y en a déjà une
         if (this.sounds.ambience) {
             try { this.sounds.ambience.source.stop(); } catch(e){}
         }
@@ -101,7 +152,6 @@ window.soundManager = {
             if (!this.init()) return false;
         }
         
-        // Reprendre le contexte s'il est suspendu
         if (this.context.state === 'suspended') {
             this.context.resume();
         }
@@ -109,11 +159,9 @@ window.soundManager = {
         this.enabled = true;
         this.muted = false;
         
-        // Démarrer l'ambiance si chargée
         if (this.buffers.ambience) {
             this.playAmbience();
         } else {
-            // Réessayer plus tard si le chargement est en cours
             setTimeout(() => {
                 if (this.buffers.ambience && this.enabled && !this.muted) {
                     this.playAmbience();
@@ -125,12 +173,10 @@ window.soundManager = {
     
     // Basculer Mute/Unmute
     toggleMute: function() {
-        console.log("🖱️ Clic détecté sur le bouton audio"); // Debug log
-
         // Premier clic active le moteur audio
         if (!this.enabled || !this.context) {
             const success = this.enable();
-            return !success; // Si activé (true), on renvoie false pour dire "pas muet"
+            return !success; 
         }
         
         this.muted = !this.muted;
@@ -141,9 +187,9 @@ window.soundManager = {
                 this.sounds.ambience = null;
             }
         } else {
-            if (this.buffers.ambience) {
-                this.playAmbience();
-            }
+            // Force Resume si nécessaire
+            if (this.context.state === 'suspended') this.context.resume();
+            if (this.buffers.ambience) this.playAmbience();
         }
         return this.muted;
     }
