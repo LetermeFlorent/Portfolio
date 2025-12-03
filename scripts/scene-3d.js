@@ -13,15 +13,12 @@
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     
     // --- GESTION CAMERA RESPONSIVE ---
-    // Sur mobile (portrait), on recule la caméra pour voir les anneaux en entier
-    // sinon ils sont coupés par la largeur de l'écran.
     function updateCameraPosition() {
         const isMobile = window.innerWidth < 768;
         // PC : z=10 | Mobile : z=18 (plus de recul)
         return isMobile ? 18 : 10;
     }
     
-    // Initialisation position
     camera.position.z = updateCameraPosition();
 
     const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: "high-performance" });
@@ -32,7 +29,7 @@
     const spaceGroup = new THREE.Group();
     scene.add(spaceGroup);
     
-    // Ajustement de l'échelle sur mobile pour que ça soit "imposant"
+    // Ajustement de l'échelle sur mobile
     if (window.innerWidth < 768) {
         spaceGroup.scale.set(1.2, 1.2, 1.2);
     }
@@ -43,10 +40,9 @@
     const posArray = new Float32Array(starsCnt * 3);
     
     for(let i = 0; i < starsCnt * 3; i += 3) {
-        // Etoiles réparties très loin autour
         posArray[i] = (Math.random() - 0.5) * 600;     
         posArray[i + 1] = (Math.random() - 0.5) * 600; 
-        posArray[i + 2] = (Math.random() - 0.5) * 600 - 100; // Décalage vers le fond 
+        posArray[i + 2] = (Math.random() - 0.5) * 600 - 100; 
     }
     
     starsGeo.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
@@ -58,26 +54,22 @@
     scene.add(starMesh);
 
     // --- 3. STRUCTURE CENTRALE (GYROSCOPE 4 ANNEAUX) ---
-    // Ring 1
     const r1Geo = new THREE.TorusGeometry(12, 0.1, 16, 100); 
     const r1Mat = new THREE.MeshBasicMaterial({ color: 0x3b82f6, wireframe: true, transparent: true, opacity: 0.2 });
     const ring1 = new THREE.Mesh(r1Geo, r1Mat);
     spaceGroup.add(ring1);
 
-    // Ring 2
     const r2Geo = new THREE.TorusGeometry(9, 0.3, 16, 100);
     const r2Mat = new THREE.PointsMaterial({ color: 0x3b82f6, size: 0.05, transparent: true, opacity: 0.5, blending: THREE.AdditiveBlending });
     const ring2 = new THREE.Points(r2Geo, r2Mat);
     ring2.rotation.x = Math.PI / 1.5;
     spaceGroup.add(ring2);
 
-    // Ring 3 (Scanner)
     const r3Geo = new THREE.RingGeometry(15.5, 15.6, 64);
     const r3Mat = new THREE.MeshBasicMaterial({ color: 0x60a5fa, side: THREE.DoubleSide, transparent: true, opacity: 0.3 });
     const ring3 = new THREE.Mesh(r3Geo, r3Mat);
     spaceGroup.add(ring3);
 
-    // Ring 5 (Cage Violette)
     const r5Geo = new THREE.TorusGeometry(18, 0.1, 3, 6); 
     const r5Mat = new THREE.MeshBasicMaterial({ color: 0xa855f7, wireframe: true, transparent: true, opacity: 0.2 });
     const ring5 = new THREE.Mesh(r5Geo, r5Mat);
@@ -103,6 +95,8 @@
     }
 
     function spawnSun(x, y, z, isMain) {
+        const isMobile = window.innerWidth < 768; // Vérification Mobile
+
         const sunMat = new THREE.SpriteMaterial({ 
             map: createSunTexture(), color: 0xffffff, 
             blending: THREE.AdditiveBlending, depthWrite: false, transparent: true 
@@ -110,11 +104,19 @@
         const sun = new THREE.Sprite(sunMat); 
         sun.scale.set(0.1, 0.1, 1); 
         sun.position.set(x, y, z);
+        
+        // MODIF: Visibilité conditionnelle dès la création
+        sun.visible = !isMobile;
+
         scene.add(sun);
         suns.push(sun);
 
         const sunLight = new THREE.PointLight(0xffffff, 0.1, 200); 
         sunLight.position.set(x, y, z + 10);
+        
+        // MODIF: Lumière visible uniquement sur PC
+        sunLight.visible = !isMobile;
+        
         scene.add(sunLight);
 
         const shockSphereGeo = new THREE.SphereGeometry(1, 32, 32);
@@ -124,6 +126,10 @@
         });
         const shockSphere = new THREE.Mesh(shockSphereGeo, shockSphereMat);
         shockSphere.position.copy(sun.position);
+        
+        // MODIF: Onde de choc visible uniquement sur PC
+        shockSphere.visible = !isMobile;
+
         scene.add(shockSphere);
 
         const instability = {
@@ -140,6 +146,20 @@
 
         gsap.to(sun.scale, { x: 80, y: 80, duration: 8, ease: "power2.out" });
         gsap.to(sunLight, { intensity: 2, duration: 8, ease: "power2.out" });
+    }
+
+    // MODIF: Fonction pour mettre à jour la visibilité de TOUS les soleils existants
+    function updateSunsVisibility() {
+        const isMobile = window.innerWidth < 768;
+        suns.forEach(sun => {
+            const data = sunData.get(sun.uuid);
+            if(data) {
+                // On cache ou affiche le sprite, la lumière et l'onde de choc
+                sun.visible = !isMobile;
+                data.light.visible = !isMobile;
+                data.shock.visible = !isMobile;
+            }
+        });
     }
 
     spawnSun(50, 20, -60, true);
@@ -170,17 +190,26 @@
     };
 
     window.addEventListener('mousemove', (event) => {
+        if (window.innerWidth < 768) return; // Pas de curseur interactif sur mobile (puisque pas de soleil)
         if (document.getElementById('cv-modal').style.display === 'flex') return;
+        
         updateMouse(event.clientX, event.clientY);
         raycaster.setFromCamera(mouse, camera);
         const isHoveringCard = isEventOnInteractiveElement(event);
-        const intersects = raycaster.intersectObjects(suns);
-        if (intersects.length > 0 && !isHoveringCard) { document.body.style.cursor = 'pointer'; } else { document.body.style.cursor = 'default'; }
+        const intersects = raycaster.intersectObjects(suns); // Raycaster ignore automatiquement les objets invisibles
+        
+        if (intersects.length > 0 && !isHoveringCard) { 
+            document.body.style.cursor = 'pointer'; 
+        } else { 
+            document.body.style.cursor = 'default'; 
+        }
     });
 
     const handleInteraction = (event) => {
+        if (window.innerWidth < 768) return; // Pas d'interaction sur mobile
         if (document.getElementById('cv-modal').style.display === 'flex') return;
         if (isEventOnInteractiveElement(event)) return;
+        
         let clientX, clientY;
         if (event.type === 'touchstart' || event.type === 'touchend') {
              clientX = event.changedTouches[0].clientX;
@@ -191,6 +220,8 @@
         }
         updateMouse(clientX, clientY);
         raycaster.setFromCamera(mouse, camera);
+        
+        // Raycaster ne touchera pas les soleils si sun.visible = false
         const intersects = raycaster.intersectObjects(suns);
 
         if (intersects.length > 0) {
@@ -332,8 +363,10 @@
             nextShootingStarDelay = Math.random() * 1500 + 500; 
         }
 
-        // Animation Soleils
+        // Animation Soleils (seulement si visibles)
         suns.forEach(sun => {
+            if (!sun.visible) return; // Optimisation : pas de calcul si invisible
+            
             const data = sunData.get(sun.uuid);
             if (data && !data.isExploding) {
                 const instab = data.instability;
@@ -358,11 +391,13 @@
         camera.updateProjectionMatrix(); 
         renderer.setSize(window.innerWidth, window.innerHeight);
         
-        // Mise à jour de la position caméra Responsive
-        // On remet la caméra à jour si on passe du mode portrait au mode paysage
+        // Update Camera responsive
         camera.position.z = updateCameraPosition();
         
-        // Mise à jour de l'échelle des objets
+        // MODIF: Mise à jour visibilité soleils
+        updateSunsVisibility();
+        
+        // Update Echelle
         if (window.innerWidth < 768) {
             spaceGroup.scale.set(1.2, 1.2, 1.2);
         } else {
