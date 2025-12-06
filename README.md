@@ -1,94 +1,166 @@
-<div align="center">
+# 🎨 Portfolio - Florent Leterme
 
-  <!-- TITRE ANIMÉ -->
-  <a href="https://letermeflorent.github.io/Portfolio/">
-    <img src="https://readme-typing-svg.herokuapp.com?font=Orbitron&weight=600&size=35&pause=1000&color=A855F7&center=true&vCenter=true&width=700&lines=PORTFOLIO+IMMERSIF;FLORENT+LETERME;WEB+%26+LOGICIEL;EXPERIENCE+THREE.JS" alt="Typing SVG" />
-  </a>
+Portfolio personnel moderne et interactif avec animations GSAP et intégration GitHub API.
 
-  <br />
+## 📁 Structure du Projet
 
-  <!-- BADGES DU PROJET -->
-  <img src="https://img.shields.io/badge/VERSION-1.0.0-3b82f6?style=for-the-badge&logo=github" alt="Version" />
-  <img src="https://img.shields.io/badge/TECH-THREE.JS-white?style=for-the-badge&logo=three.js&logoColor=black" alt="Three.js" />
-  <img src="https://img.shields.io/badge/DESIGN-GLASSMORPHISM-a855f7?style=for-the-badge&logo=framer&logoColor=white" alt="Design" />
+```
+Portfolio/
+├── assets/              # Ressources statiques
+│   └── audios/         # Fichiers audio
+│
+├── css/                # Styles CSS modulaires
+│   ├── base/           # Styles de base
+│   │   ├── variables.css    # Variables CSS (couleurs, espacements, etc.)
+│   │   ├── reset.css        # Reset et styles globaux
+│   │   └── typography.css   # Typographie et textes
+│   │
+│   ├── components/     # Composants UI
+│   │   ├── navbar.css       # Navigation
+│   │   ├── hero.css         # Section hero
+│   │   ├── projects.css     # Grille de projets GitHub
+│   │   ├── tech-stack.css   # Stack technique
+│   │   ├── footer.css       # Footer et contact
+│   │   └── modal-cv.css     # Modale et CV
+│   │
+│   ├── layout/         # Mise en page
+│   │   ├── sections.css     # Sections et conteneurs
+│   │   └── responsive.css   # Media queries
+│   │
+│   └── main.css        # Point d'entrée CSS (imports)
+│
+├── js/                 # JavaScript modulaire
+│   ├── config/         # Configuration
+│   │   └── constants.js     # Constantes et configuration
+│   │
+│   ├── modules/        # Modules fonctionnels
+│   │   ├── animations.js    # Animations GSAP
+│   │   ├── github-api.js    # API GitHub
+│   │   ├── pagination.js    # Pagination des projets
+│   │   ├── modal-cv.js      # Gestion modale CV
+│   │   └── pdf-export.js    # Export PDF du CV
+│   │
+│   └── main.js         # Point d'entrée JS
+│
+├── index.html          # Page principale
+└── README.md          # Documentation
+```
 
-  <br /> <br />
+## 🚀 Fonctionnalités
 
-  > **Une exploration interactive entre rigueur académique et expérimentation créative.**
-  > <br> *Ce projet met en scène un univers 3D réactif, une interface Cyber-Glass et une identité double.*
+### 🎭 Animations
+- Animations GSAP fluides et performantes
+- Scroll smooth personnalisé
+- Effets de révélation au scroll
+- Transitions entre les pages de projets
 
-  <br />
+### 💼 Projets GitHub
+- Récupération automatique via l'API GitHub
+- Fallback en cas d'échec de l'API
+- Pagination intelligente (4 projets par page)
+- Couleurs et icônes par langage
 
-  <!-- BOUTON D'ACCÈS -->
-  <a href="https://letermeflorent.github.io/Portfolio/">
-    <img src="https://img.shields.io/badge/LANCER_L'EXPERIENCE_ONLINE-success?style=for-the-badge&logo=google-chrome&logoColor=white" />
-  </a>
+### 📄 CV Interactif
+- Modale élégante et responsive
+- Export PDF optimisé (1 page A4)
+- Même rendu sur mobile/desktop
+- Layout forcé en mode desktop pour l'export
 
-</div>
+### 📱 Responsive Design
+- Mobile-first
+- Breakpoints : 480px, 768px, 1024px
+- Navigation adaptative
+- Grilles fluides
 
----
+## 🛠️ Technologies
 
-## ✨ Fonctionnalités & Immersion
+- **HTML5** - Structure sémantique
+- **CSS3** - Styles modulaires avec variables CSS
+- **JavaScript ES6+** - Modules natifs
+- **GSAP 3** - Animations
+- **GitHub API** - Récupération des projets
+- **html2pdf.js** - Export PDF
 
-<table>
-  <tr>
-    <td width="50%">
-      <h3>🌌 Expérience 3D (Three.js)</h3>
-      <ul>
-        <li><b>Système Solaire Interactif :</b> Des nœuds (soleils) qui explosent en particules au clic.</li>
-        <li><b>Gyroscope Cybernétique :</b> Une structure centrale composée de 4 anneaux aux comportements uniques (Scanner, Low-Poly, Particules).</li>
-        <li><b>Effets Réactifs :</b> Flashs lumineux et vibrations ("Glitch") lors des interactions.</li>
-        <li><b>Atmosphère :</b> Étoiles filantes procédurales traversant l'espace lointain.</li>
-      </ul>
-    </td>
-    <td width="50%">
-      <h3>🎨 UI & Design (Cyber-Glass)</h3>
-      <ul>
-        <li><b>Interface Glassmorphism :</b> Cartes translucides avec effets de profondeur, volume et réfraction de lumière.</li>
-        <li><b>Hacker Text Effect :</b> Animation de décryptage dynamique sur le nom (Florent Leterme ↔ Dreyka Oas).</li>
-        <li><b>Double Thème :</b>
-          <ul>
-            <li>🔵 <b>Academic :</b> Style "System Log" structuré.</li>
-            <li>🟣 <b>Creative :</b> Style "Prototype Néon".</li>
-          </ul>
-        </li>
-      </ul>
-    </td>
-  </tr>
-</table>
+## 📦 Installation
 
-### 🔊 Soundscape Audio
-L'expérience est enrichie par un moteur audio gérant l'autoplay des navigateurs :
-*   **Ambiance :** Nappe sonore spatiale en boucle.
-*   **SFX 3D :** Sons d'explosion synchronisés avec l'onde de choc visuelle.
-*   **Feedback UI :** Son "Flyby" lors du défilement rapide.
-
----
-
-## 🛠️ Stack Technique
-
-<div align="center">
-  <img src="https://skillicons.dev/icons?i=html,css,js,threejs,git,vscode" />
-  <br>
-  <i>Propulsé par <b>Three.js</b> (WebGL) et <b>GSAP</b> (Animations).</i>
-</div>
-
----
-
-## 📂 Structure du Code
-
+1. Cloner le projet
 ```bash
-/
-├── index.html              # Sémantique, Contenu & Structure DOM
-├── style.css               # Design Responsive, Effets Glass & Néon
-├── cv.pdf                  # Document téléchargeable
-│
-├── audios/                 # Assets sonores (MP3)
-│   ├── ambience.mp3        # Background loop
-│   ├── explosion.mp3       # Impact FX
-│   └── flyby.mp3           # Scroll FX
-│
-└── scripts/
-    ├── audio-manager.js    # Gestionnaire AudioContext (Mute/Unmute logic)
-    ├── scene-3d.js         # Moteur Three.js (Rendu, Physique, Particules)
-    └── main-ui.js          # Logique Interface, GSAP & Hacker Effect
+git clone https://github.com/LetermeFlorent/Portfolio.git
+cd Portfolio
+```
+
+2. Ouvrir avec un serveur local (nécessaire pour les modules ES6)
+```bash
+# Avec Python 3
+python -m http.server 8000
+
+# Avec Node.js (http-server)
+npx http-server
+
+# Avec PHP
+php -S localhost:8000
+```
+
+3. Ouvrir dans le navigateur
+```
+http://localhost:8000
+```
+
+## 🎨 Personnalisation
+
+### Variables CSS
+Modifier les couleurs et espacements dans `css/base/variables.css`
+
+```css
+:root {
+    --bg-color: #f8f8f8;
+    --accent: #2563eb;
+    --spacing-md: 40px;
+    /* ... */
+}
+```
+
+### Projets de secours
+Modifier les projets fallback dans `js/config/constants.js`
+
+```javascript
+export const fallbackProjects = {
+    'VotreUsername': [
+        { name: 'Projet', url: '...', description: '...', language: 'PHP' }
+    ]
+};
+```
+
+## 📝 Modules JavaScript
+
+### animations.js
+Gère toutes les animations GSAP (hero, navbar, footer)
+
+### github-api.js
+Récupération et affichage des projets GitHub
+
+### pagination.js
+Système de pagination réutilisable avec animations
+
+### modal-cv.js
+Ouverture/fermeture de la modale avec GSAP
+
+### pdf-export.js
+Export PDF optimisé du CV
+
+## 🌐 Navigateurs supportés
+
+- Chrome/Edge (dernières versions)
+- Firefox (dernières versions)
+- Safari 14+
+- Mobile iOS/Android
+
+## 📄 Licence
+
+© 2025 Florent Leterme - Tous droits réservés
+
+## 📧 Contact
+
+- **Email** : letermeflorent@gmail.com
+- **GitHub** : [@LetermeFlorent](https://github.com/LetermeFlorent)
+- **LinkedIn** : [Votre profil](https://www.linkedin.com)

@@ -1,0 +1,27 @@
+/* =========================================
+   SECTIONS & LAYOUT
+   ========================================= */
+.container { 
+    max-width: 1200px; 
+    margin: 0 auto; 
+    width: 100%; 
+    position: relative;
+    padding: 0 25px; 
+}
+
+.section { 
+    padding: var(--spacing-lg) 0; 
+}
+
+.no-bottom-padding { 
+    padding-bottom: 0 !important; 
+}
+
+.no-top-padding { 
+    padding-top: var(--spacing-sm) !important; 
+}
+
+/* Utilitaires */
+.reveal {
+    opacity: 0;
+}

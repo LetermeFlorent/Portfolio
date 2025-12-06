@@ -1,0 +1,35 @@
+/* =========================================
+   VARIABLES CSS - THÈME GLOBAL
+   ========================================= */
+:root {
+    /* Couleurs principales */
+    --bg-color: #f8f8f8;       
+    --text-main: #111111;
+    --text-muted: #666666;
+    --accent: #2563eb;         
+    --accent-perso: #7c3aed;   
+    --border: rgba(0,0,0,0.08);
+    
+    /* Espacements */
+    --spacing-xs: 10px;
+    --spacing-sm: 20px;
+    --spacing-md: 40px;
+    --spacing-lg: 60px;
+    --spacing-xl: 100px;
+    
+    /* Bordures */
+    --radius-sm: 8px;
+    --radius-md: 16px;
+    --radius-lg: 24px;
+    --radius-xl: 50px;
+    
+    /* Transitions */
+    --transition-fast: 0.2s ease;
+    --transition-normal: 0.3s ease;
+    --transition-slow: 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+    
+    /* Ombres */
+    --shadow-sm: 0 2px 5px rgba(0,0,0,0.02);
+    --shadow-md: 0 4px 15px rgba(0,0,0,0.05);
+    --shadow-lg: 0 10px 25px rgba(0,0,0,0.08);
+}

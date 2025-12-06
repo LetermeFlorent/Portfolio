@@ -1,0 +1,41 @@
+/* =========================================
+   TYPOGRAPHIE
+   ========================================= */
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.hero-title {
+    font-size: clamp(3.5rem, 8vw, 7rem); 
+    line-height: 1; 
+    font-weight: 800; 
+    letter-spacing: -0.03em; 
+    margin-bottom: var(--spacing-md);
+    -webkit-font-smoothing: antialiased;
+    transform: translateZ(0); 
+    position: relative;
+    z-index: 2; 
+}
+
+.highlight { 
+    color: var(--accent); 
+}
+
+.indent { 
+    margin-left: 10vw; 
+    color: var(--text-muted); 
+}
+
+.mask { 
+    overflow: hidden; 
+}
+
+.reveal-text { 
+    display: block; 
+    transform: translateY(100%);
+    will-change: transform;
+    backface-visibility: hidden;
+    perspective: 1000px;
+}

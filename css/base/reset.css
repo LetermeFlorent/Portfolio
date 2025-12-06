@@ -1,0 +1,45 @@
+/* =========================================
+   RESET & BASE
+   ========================================= */
+* { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+}
+
+html { 
+    scroll-behavior: auto; 
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    font-family: 'Manrope', sans-serif;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+}
+
+body.no-scroll { 
+    overflow: hidden; 
+    height: 100vh; 
+}
+
+/* Éléments interactifs */
+a, button, .btn, .btn-outline {
+    cursor: pointer;
+    text-decoration: none;
+}
+
+button:disabled {
+    cursor: not-allowed;
+}
+
+/* Background noise */
+.noise-bg {
+    position: fixed; 
+    inset: 0; 
+    pointer-events: none; 
+    z-index: 0; 
+    opacity: 0.03;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+}

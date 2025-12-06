@@ -1,0 +1,319 @@
+/* =========================================
+   MODALE CV (THEME CLAIR)
+   ========================================= */
+.modal-wrapper { 
+    position: fixed; 
+    inset: 0; 
+    z-index: 2000; 
+    display: none; 
+    justify-content: center; 
+    align-items: center; 
+    padding: var(--spacing-sm);
+}
+
+.modal-backdrop { 
+    position: fixed; 
+    inset: 0; 
+    background: rgba(0, 0, 0, 0.4); 
+    backdrop-filter: blur(8px); 
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 1; 
+    opacity: 0; 
+}
+
+.modal-panel {
+    width: 1000px; 
+    height: 90vh; 
+    max-height: 850px;
+    background: #ffffff; 
+    border: 1px solid #e5e7eb; 
+    border-radius: var(--spacing-sm); 
+    position: relative; 
+    z-index: 2;
+    overflow: hidden;
+    display: flex; 
+    flex-direction: column; 
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+    opacity: 0;
+}
+
+.modal-head { 
+    padding: 15px 30px; 
+    background: #f9fafb; 
+    border-bottom: 1px solid #e5e7eb;
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
+    height: 70px;
+}
+
+.modal-head h3 { 
+    font-size: 1rem; 
+    font-weight: 600; 
+    color: #1f2937;
+    letter-spacing: 0.5px;
+}
+
+.modal-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.btn-download { 
+    background: var(--accent); 
+    color: #fff; 
+    padding: 8px 18px; 
+    border: none; 
+    border-radius: var(--radius-sm); 
+    font-size: 0.85rem; 
+    font-weight: 600; 
+    transition: all var(--transition-fast);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-download:hover { 
+    background: #1d4ed8; 
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(37, 99, 235, 0.3);
+}
+
+.close-icon { 
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background: #f3f4f6; 
+    border: 1px solid #e5e7eb;
+    color: #4b5563; 
+    font-size: 1rem; 
+    cursor: pointer; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-fast);
+}
+
+.close-icon:hover { 
+    background: #e5e7eb;
+    color: #111;
+    transform: rotate(90deg);
+}
+
+.modal-body-pdf { 
+    flex: 1; 
+    overflow-y: auto; 
+    padding: var(--spacing-md); 
+    background: #f3f4f6; 
+    display: block; 
+    text-align: center; 
+    scrollbar-width: thin;
+    scrollbar-color: #d1d5db #f3f4f6;
+}
+
+.modal-body-pdf::-webkit-scrollbar { width: 8px; }
+.modal-body-pdf::-webkit-scrollbar-track { background: #f3f4f6; }
+.modal-body-pdf::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 4px; }
+
+/* Papier CV */
+.cv-paper {
+    width: 210mm; 
+    height: auto;
+    max-height: 287mm;
+    background: #fff; 
+    padding: 8mm 12mm; 
+    margin: 0 auto;
+    font-family: Arial, Helvetica, sans-serif; 
+    color: #000;
+    font-size: 9pt; 
+    line-height: 1.3; 
+    text-align: left; 
+    box-sizing: border-box;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+}
+
+.cv-header-paper { 
+    display: flex; 
+    justify-content: space-between; 
+    margin-bottom: 10px; 
+    border-bottom: 2px solid #000;
+    padding-bottom: 8px; 
+}
+
+.cv-left h1 { 
+    font-size: 20pt; 
+    font-weight: 800; 
+    text-transform: uppercase;
+    margin: 0 0 5px 0;
+    letter-spacing: -1px;
+    color: #000;
+}
+
+.cv-left h2 {
+    font-size: 10pt;
+    font-weight: normal;
+    color: #000;
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.cv-right { 
+    text-align: right; 
+    font-size: 8.5pt; 
+    color: #000; 
+}
+
+.cv-right p { 
+    margin: 2px 0; 
+}
+
+.cv-section-paper { 
+    margin-bottom: 8px; 
+}
+
+.cv-section-paper:last-child { 
+    margin-bottom: 0; 
+}
+
+.cv-title-paper { 
+    font-size: 10pt;
+    font-weight: 700; 
+    background: transparent;
+    padding: 0;
+    border-left: none;
+    border-bottom: 2px solid #000;
+    margin-bottom: 6px; 
+    text-transform: uppercase;
+    color: #000;
+}
+
+.cv-entry-paper { 
+    margin-bottom: 6px; 
+}
+
+.cv-entry-head { 
+    display: flex; 
+    justify-content: space-between; 
+    margin-bottom: 2px;
+}
+
+.cv-entry-head strong { 
+    font-size: 9.5pt; 
+    color: #000; 
+    font-weight: 700; 
+}
+
+.cv-date-paper { 
+    font-weight: 600; 
+    color: #000; 
+    font-size: 8.5pt; 
+}
+
+.cv-entry-paper ul { 
+    margin-left: 18px; 
+    margin-top: 2px; 
+    color: #000; 
+}
+
+.cv-entry-paper li { 
+    margin-bottom: 1px; 
+}
+
+.cv-skill-cat { 
+    margin-bottom: 4px; 
+}
+
+.cv-skill-cat strong { 
+    display: block; 
+    margin-bottom: 2px; 
+    font-weight: 700; 
+    text-decoration: underline; 
+    font-size: 9.5pt;
+}
+
+.cv-tag {
+    display: inline-block;
+    border: 1px solid #000; 
+    border-radius: 4px;
+    padding: 1px 5px;
+    margin: 1px;
+    font-size: 8pt;
+    background: #fff;
+    color: #000;
+    font-weight: 500;
+}
+
+/* Mode export PDF - Force le layout desktop */
+.pdf-export-mode {
+    width: 210mm !important;
+    height: 297mm !important;
+    max-height: 297mm !important;
+    padding: 8mm 12mm !important;
+    font-size: 9pt !important;
+    line-height: 1.3 !important;
+    overflow: hidden !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    display: block !important;
+    background: #ffffff !important;
+}
+
+.pdf-export-mode .cv-header-paper {
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: space-between !important;
+    align-items: flex-start !important;
+    margin-bottom: 10px !important;
+    padding-bottom: 8px !important;
+}
+
+.pdf-export-mode .cv-left {
+    width: 60% !important;
+    text-align: left !important;
+}
+
+.pdf-export-mode .cv-right {
+    width: 40% !important;
+    text-align: right !important;
+    margin-top: 0 !important;
+}
+
+.pdf-export-mode .cv-section-paper { margin-bottom: 8px !important; }
+.pdf-export-mode .cv-entry-paper { margin-bottom: 6px !important; }
+.pdf-export-mode .cv-skill-cat { margin-bottom: 4px !important; }
+.pdf-export-mode .cv-title-paper { margin-bottom: 6px !important; }
+
+/* Forcer la visibilité de tous les éléments en mode export */
+.pdf-export-mode * {
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+.pdf-export-mode h1,
+.pdf-export-mode h2,
+.pdf-export-mode h3,
+.pdf-export-mode p,
+.pdf-export-mode ul,
+.pdf-export-mode li,
+.pdf-export-mode strong,
+.pdf-export-mode div,
+.pdf-export-mode span {
+    color: #000 !important;
+    display: block !important;
+}
+
+.pdf-export-mode ul {
+    display: block !important;
+}
+
+.pdf-export-mode li {
+    display: list-item !important;
+}
+
+.pdf-export-mode .cv-tag {
+    display: inline-block !important;
+}

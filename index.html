@@ -5,377 +5,393 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Florent Leterme | Portfolio</title>
     
-    <!-- Polices & Icones -->
+    <!-- Fonts & Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" type='text/css' href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Feuille de style principale -->
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/main.css">
 </head>
 <body>
 
-    <!-- Conteneur pour la scène Three.js (Arrière-plan) -->
-    <div id="canvas-container"></div>
+    <div class="noise-bg"></div>
 
-    <!-- Contrôleur Audio (Mute/Unmute) -->
-    <div id="audio-toggle" class="muted" title="Activer/Désactiver le son">🔇</div>
+    <nav class="navbar">
+        <a href="#" class="logo">
+            Florent L<span class="highlight">.</span>
+        </a>
+        <div class="nav-center">
+            <a href="#work" class="nav-link">GitHub Projects</a>
+            <a href="#stack" class="nav-link">Stack</a>
+            <a href="#about" class="nav-link">Mes liens</a>
+        </div>
+        <button id="open-cv-btn" class="btn-outline">Mon CV</button>
+    </nav>
 
-    <!-- MODALE : Aperçu du CV -->
-    <div id="cv-modal" class="modal-overlay">
-        <div class="cv-document-wrapper">
-            <div class="cv-header-toolbar">
-                <span class="toolbar-title">Aperçu CV</span>
-                <div class="toolbar-actions">
-                    <button id="print-html-btn" class="btn-toolbar">🖨️ Imprimer</button>
-                    <button id="close-modal-btn" class="btn-close">✕</button>
+    <main>
+        <!-- HERO SECTION -->
+        <header id="hero" class="hero-section">
+            <div class="container">
+                
+                <div class="badge-pill reveal">
+                    <span class="status-dot"></span>
+                    À l'écoute d'opportunités
+                </div>
+                
+                <h1 class="hero-title">
+                    <div class="mask"><span class="reveal-text">Creative</span></div>
+                    <div class="mask"><span class="reveal-text">Fullstack</span></div>
+                    <div class="mask"><span class="reveal-text indent">Developer<span class="dot">.</span></span></div>
+                </h1>
+                
+                <div class="hero-footer reveal">
+                    <p>Développement Web & Logiciel.<br>De l'architecture backend à l'interface utilisateur.</p>
                 </div>
             </div>
-            <div class="cv-scroll-area" id="printable-area">
-                <div class="cv-container">
-                    <!-- En-tête CV -->
-                    <div class="cv-top-header">
-                        <div class="cv-name">
-                            <h1>Florent Leterme</h1>
-                            <h2>Développeur Web & Logiciel</h2>
+        </header>
+
+        <!-- STACK MARQUEE -->
+        <div class="marquee-wrapper opt-render">
+            <div class="marquee-content">
+                <span>PHP 8</span> <span class="sep">•</span>
+                <span>SYMFONY</span> <span class="sep">•</span>
+                <span>JAVA</span> <span class="sep">•</span>
+                <span>POSTGRESQL</span> <span class="sep">•</span>
+                <span class="perso">PYTHON</span> <span class="sep">•</span>
+                <span class="perso">NODE.JS</span> <span class="sep">•</span>
+                
+                <span>PHP 8</span> <span class="sep">•</span>
+                <span>SYMFONY</span> <span class="sep">•</span>
+                <span>JAVA</span> <span class="sep">•</span>
+                <span>POSTGRESQL</span> <span class="sep">•</span>
+                <span class="perso">PYTHON</span> <span class="sep">•</span>
+                <span class="perso">NODE.JS</span> <span class="sep">•</span>
+            </div>
+        </div>
+
+        <!-- SECTION PROJETS GITHUB -->
+        <section id="work" class="section no-bottom-padding">
+            <div class="container">
+                
+                <!-- GROUPE 1 : PROJETS PRO (@LetermeFlorent) -->
+                <div class="github-group">
+                    <div class="group-header">
+                        <div class="header-left">
+                            <h2>
+                                <a href="https://github.com/LetermeFlorent" target="_blank" class="github-link">
+                                    <i class="fa-brands fa-github"></i> @LetermeFlorent
+                                </a>
+                            </h2>
+                            <span class="group-subtitle">Projets Académiques & Web</span>
                         </div>
-                        <div class="cv-contact">
-                            37380 Reugny<br>
-                            06 88 68 59 70<br>
-                            <a href="mailto:letermeflorent@gmail.com">letermeflorent@gmail.com</a><br>
-                            <a href="https://github.com/LetermeFlorent" target="_blank">GitHub/LetermeFlorent</a><br>
-                            Permis B
-                        </div>
+                        <span class="project-count" id="pro-count">Charging...</span>
                     </div>
 
-                    <!-- Expériences -->
-                    <div class="cv-section-title">Expériences (Projets & Stages)</div>
+                    <div class="square-grid" id="pro-grid">
+                        <div class="loading-msg">Chargement des projets...</div>
+                    </div>
+
+                    <div class="pagination-controls" id="pro-pagination">
+                        <button class="page-btn prev-btn">←</button>
+                        <span class="page-info">1 / 1</span>
+                        <button class="page-btn next-btn">→</button>
+                    </div>
+                </div>
+
+                <!-- GROUPE 2 : PROJETS PERSO (@Dreyka-Oas) -->
+                <div class="github-group">
+                    <div class="group-header">
+                        <div class="header-left">
+                            <h2>
+                                <a href="https://github.com/Dreyka-Oas" target="_blank" class="github-link">
+                                    <i class="fa-solid fa-flask"></i> @Dreyka-Oas
+                                </a>
+                            </h2>
+                            <span class="group-subtitle">Labo Expérimental & Outils</span>
+                        </div>
+                        <span class="project-count" id="lab-count">Charging...</span>
+                    </div>
+
+                    <div class="square-grid" id="lab-grid">
+                        <div class="loading-msg">Chargement des projets...</div>
+                    </div>
+
+                    <div class="pagination-controls" id="lab-pagination">
+                        <button class="page-btn prev-btn">←</button>
+                        <span class="page-info">1 / 1</span>
+                        <button class="page-btn next-btn">→</button>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SÉPARATEUR -->
+        <div class="wave-lines-separator">
+            <svg class="waves-lines" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+            viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+                <defs>
+                    <path id="line-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18" />
+                </defs>
+                <g class="parallax-lines">
+                    <use xlink:href="#line-wave" x="48" y="0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="0.3" />
+                    <use xlink:href="#line-wave" x="48" y="3" fill="none" stroke="rgba(37, 99, 235, 0.2)" stroke-width="0.5" />
+                    <use xlink:href="#line-wave" x="48" y="5" fill="none" stroke="rgba(0,0,0,0.15)" stroke-width="0.3" />
+                    <use xlink:href="#line-wave" x="48" y="7" fill="none" stroke="rgba(124, 58, 237, 0.2)" stroke-width="0.5" />
+                </g>
+            </svg>
+        </div>
+
+        <!-- STACK TECHNIQUE -->
+        <section id="stack" class="section no-top-padding">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Compétences Techniques</h2>
+                    <p class="section-desc">Mon environnement de développement favori.</p>
+                </div>
+
+                <div class="tech-grid">
+                    <!-- Carte 1 -->
+                    <div class="tech-card">
+                        <div class="tech-header">
+                            <div class="icon-box"><i class="fa-solid fa-server"></i></div>
+                            <h3>Back-End & Architecture</h3>
+                        </div>
+                        <div class="tech-list">
+                            <a href="https://www.php.net/" target="_blank" class="tech-badge"><i class="devicon-php-plain"></i> PHP 8+</a>
+                            <a href="https://symfony.com/" target="_blank" class="tech-badge"><i class="devicon-symfony-original"></i> Symfony</a>
+                            <a href="https://dev.java/" target="_blank" class="tech-badge"><i class="devicon-java-plain"></i> Java</a>
+                            <a href="https://www.python.org/" target="_blank" class="tech-badge"><i class="devicon-python-plain"></i> Python</a>
+                            <a href="https://www.postgresql.org/" target="_blank" class="tech-badge"><i class="devicon-postgresql-plain"></i> PostgreSQL</a>
+                            <a href="https://www.mysql.com/fr/" target="_blank" class="tech-badge"><i class="devicon-mysql-plain"></i> MySQL</a>
+                        </div>
+                    </div>
+                    <!-- Carte 2 -->
+                    <div class="tech-card">
+                        <div class="tech-header">
+                            <div class="icon-box"><i class="fa-solid fa-code"></i></div>
+                            <h3>Front-End & UI</h3>
+                        </div>
+                        <div class="tech-list">
+                            <a href="https://developer.mozilla.org/fr/docs/Web/JavaScript" target="_blank" class="tech-badge"><i class="devicon-javascript-plain"></i> JavaScript (ES6)</a>
+                            <a href="https://developer.mozilla.org/fr/docs/Web/HTML" target="_blank" class="tech-badge"><i class="devicon-html5-plain"></i> HTML5</a>
+                            <a href="https://sass-lang.com/" target="_blank" class="tech-badge"><i class="devicon-css3-plain"></i> SCSS / CSS</a>
+                            <a href="https://getbootstrap.com/" target="_blank" class="tech-badge"><i class="devicon-bootstrap-plain"></i> Bootstrap</a>
+                            <a href="https://gsap.com/" target="_blank" class="tech-badge"><i class="fa-solid fa-wand-magic-sparkles"></i> GSAP</a>
+                        </div>
+                    </div>
+                    <!-- Carte 3 -->
+                    <div class="tech-card">
+                        <div class="tech-header">
+                            <div class="icon-box"><i class="fa-solid fa-microchip"></i></div>
+                            <h3>Logiciel & Temps Réel</h3>
+                        </div>
+                        <div class="tech-list">
+                            <a href="https://nodejs.org/" target="_blank" class="tech-badge"><i class="devicon-nodejs-plain"></i> Node.js</a>
+                            <a href="https://socket.io/" target="_blank" class="tech-badge"><i class="devicon-socketio-original"></i> Socket.io</a>
+                            <a href="https://docs.python.org/3/library/tkinter.html" target="_blank" class="tech-badge"><i class="fa-brands fa-python"></i> Tkinter</a>
+                            <a href="https://www.gnu.org/software/bash/" target="_blank" class="tech-badge"><i class="devicon-bash-plain"></i> Shell / Bash</a>
+                        </div>
+                    </div>
+                    <!-- Carte 4 -->
+                    <div class="tech-card">
+                        <div class="tech-header">
+                            <div class="icon-box"><i class="fa-solid fa-toolbox"></i></div>
+                            <h3>DevOps & Outils</h3>
+                        </div>
+                        <div class="tech-list">
+                            <a href="https://git-scm.com/" target="_blank" class="tech-badge"><i class="devicon-git-plain"></i> Git / GitHub</a>
+                            <a href="https://www.docker.com/" target="_blank" class="tech-badge"><i class="devicon-docker-plain"></i> Docker</a>
+                            <a href="https://www.figma.com/" target="_blank" class="tech-badge"><i class="devicon-figma-plain"></i> Figma</a>
+                            <a href="https://www.linux.org/" target="_blank" class="tech-badge"><i class="devicon-linux-plain"></i> Linux</a>
+                            <a href="https://code.visualstudio.com/" target="_blank" class="tech-badge"><i class="devicon-vscode-plain"></i> VS Code</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FOOTER & CONTACT -->
+        <footer id="about" class="footer">
+            <div class="container">
+                <div class="footer-cta">
+                    <p>Me contacter</p>
+                    <a href="mailto:letermeflorent@gmail.com" class="big-mail">letermeflorent@gmail.com</a>
+                </div>
+                <div class="footer-infos">
+                    <div class="col">
+                        <span>© 2025 Florent Leterme</span>
+                    </div>
+                    <div class="col right social-links">
+                        <a href="https://www.linkedin.com" target="_blank" class="social-btn linkedin" aria-label="LinkedIn">
+                            <i class="fa-brands fa-linkedin"></i>
+                        </a>
+                        <a href="https://github.com/LetermeFlorent" target="_blank" class="social-btn github" aria-label="GitHub">
+                            <i class="fa-brands fa-github"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </main>
+
+    <!-- MODALE CV -->
+    <div id="cv-modal" class="modal-wrapper">
+        <div class="modal-backdrop"></div>
+        <div class="modal-panel pdf-mode">
+            <div class="modal-head">
+                <h3>Aperçu du CV</h3>
+                <div class="modal-actions">
+                    <button id="download-btn" class="btn-download">
+                        <i class="fa-solid fa-download"></i> Télécharger PDF
+                    </button>
+                    <button id="close-modal" class="close-icon">✕</button>
+                </div>
+            </div>
+            <div class="modal-body-pdf">
+                <!-- DOCUMENT CV HTML -->
+                <div class="cv-paper" id="cv-content">
                     
-                    <div class="cv-entry">
-                        <div class="cv-entry-header">
-                            <span class="cv-job-title">Amélioration Intranet Médecins</span>
-                            <span class="cv-date">2024 - 2025</span>
+                    <header class="cv-header-paper">
+                        <div class="cv-left">
+                            <h1>Développeur Web<br>& Logiciel</h1>
+                            <h2>LETERME FLORENT</h2>
                         </div>
-                        <span class="cv-company">CHU de Tours (Projet BTS)</span>
-                        <ul class="cv-list">
-                            <li>Amélioration des fonctionnalités existantes et ajout de nouvelles features.</li>
-                            <li>Refonte UX/UI pour optimiser le parcours utilisateur.</li>
-                        </ul>
-                    </div>
-
-                    <div class="cv-entry">
-                        <div class="cv-entry-header">
-                            <span class="cv-job-title">Site Intranet du CHU</span>
-                            <span class="cv-date">2023 - 2024</span>
+                        <div class="cv-right">
+                            <p>6 rue Bourgneuf, 37380 Reugny</p>
+                            <p>06 88 68 59 70</p>
+                            <p>letermeflorent@gmail.com</p>
+                            <p>GitHub/LetermeFlorent</p>
+                            <p>Permis B</p>
                         </div>
-                        <span class="cv-company">CHU de Tours (Projet BTS)</span>
-                        <ul class="cv-list">
-                            <li>Analyse et refonte complète de l'intranet destiné aux médecins.</li>
-                            <li>Correction des redirections et amélioration de l'ergonomie.</li>
-                            <li>Travail en équipe (méthodes agiles simulées).</li>
-                        </ul>
-                    </div>
+                    </header>
 
-                    <div class="cv-entry">
-                        <div class="cv-entry-header">
-                            <span class="cv-job-title">Simple Storage (App Gestion)</span>
-                            <span class="cv-date">2023 - 2024</span>
-                        </div>
-                        <span class="cv-company">Projet BTS</span>
-                        <ul class="cv-list">
-                            <li>Développement d'une application web de gestion de stock simple (CRUD).</li>
-                            <li>Stack : PHP, PostgreSQL, HTML/CSS.</li>
-                            <li>Intégration de <strong>FakerPHP</strong> pour les données de test.</li>
-                        </ul>
-                    </div>
-
-                    <div class="cv-entry">
-                        <div class="cv-entry-header">
-                            <span class="cv-job-title">Stage Développeur</span>
-                            <span class="cv-date">Loches, 2022 - 2023</span>
-                        </div>
-                        <span class="cv-company">PC4You</span>
-                        <ul class="cv-list">
-                            <li>Mise à jour et maintenance du CRM <strong>Dolibarr</strong>.</li>
-                            <li>Modification de modules de gestion de stock.</li>
-                        </ul>
-                    </div>
-
-                    <!-- Formation -->
-                    <div class="cv-section-title">Formation</div>
-                    <div class="cv-entry formation-entry">
-                        <div class="cv-entry-header">
-                            <span class="cv-job-title">BTS SIO SLAM (Diplôme Obtenu)</span>
-                            <span class="cv-date">2025</span>
-                        </div>
-                        <span class="cv-company">Lycée Guy Chauvet, Loudun</span>
-                        <p class="cv-desc">Solutions Logicielles et Applications Métiers</p>
-                    </div>
-
-                    <div class="cv-entry formation-entry">
-                        <div class="cv-entry-header">
-                            <span class="cv-job-title">BAC STI2D SIN</span>
-                            <span class="cv-date">2022</span>
-                        </div>
-                        <span class="cv-company">Lycée Jacques de Vaucanson, Tours</span>
-                        <p class="cv-desc">Systèmes d'Information et Numérique</p>
-                    </div>
-
-                    <!-- Compétences -->
-                    <div class="cv-section-title">Compétences Techniques</div>
-                    <div class="cv-skills-grid">
-                        <div class="skill-category">
-                            <span class="skill-title">Langages</span>
-                            <div class="tag-container">
-                                <span class="tag highlight">PHP</span>
-                                <span class="tag highlight">Java</span>
-                                <span class="tag">SQL</span>
-                                <span class="tag">HTML5/CSS3</span>
+                    <section class="cv-section-paper">
+                        <h3 class="cv-title-paper">EXPÉRIENCES (PROJETS & STAGE)</h3>
+                        
+                        <div class="cv-entry-paper">
+                            <div class="cv-entry-head">
+                                <strong>Amélioration de l'intranet du CHU de Tours (Projet BTS)</strong>
+                                <span class="cv-date-paper">2024 - 2025</span>
                             </div>
+                            <ul>
+                                <li>Amélioration des fonctionnalités existantes et ajout de nouvelles sur le site intranet des médecins.</li>
+                            </ul>
                         </div>
-                        <div class="skill-category">
-                            <span class="skill-title">Frameworks & BDD</span>
-                            <div class="tag-container">
-                                <span class="tag highlight">PostgreSQL</span>
-                                <span class="tag">MySQL</span>
-                                <span class="tag">FakerPHP</span>
+
+                        <div class="cv-entry-paper">
+                            <div class="cv-entry-head">
+                                <strong>Site intranet du CHU de Tours (Projet BTS)</strong>
+                                <span class="cv-date-paper">2023 - 2024</span>
                             </div>
+                            <ul>
+                                <li>Analyse et refonte de l'intranet destiné aux médecins.</li>
+                                <li>Correction des redirections, amélioration de la navigation et de l'ergonomie pour un site plus convivial.</li>
+                                <li>Travail en équipe (méthodes agiles simulées).</li>
+                            </ul>
                         </div>
-                        <div class="skill-category">
-                            <span class="skill-title">Outils</span>
-                            <div class="tag-container">
-                                <span class="tag highlight">Git</span>
-                                <span class="tag">VS Code</span>
-                                <span class="tag">IntelliJ</span>
+
+                        <div class="cv-entry-paper">
+                            <div class="cv-entry-head">
+                                <strong>Simple Storage (Projet BTS)</strong>
+                                <span class="cv-date-paper">2023 - 2024</span>
                             </div>
+                            <ul>
+                                <li>Développement d'une application web de gestion de stock simple (CRUD) avec listing.</li>
+                                <li>Utilisation de PHP, PostgreSQL, et HTML/CSS. Intégration FakerPHP.</li>
+                            </ul>
                         </div>
-                    </div>
+
+                        <div class="cv-entry-paper">
+                            <div class="cv-entry-head">
+                                <strong>Site Web Lycée (Projet BTS)</strong>
+                                <span class="cv-date-paper">2023 - 2024</span>
+                            </div>
+                            <ul>
+                                <li>Participation au développement du site web du lycée en équipe de cinq.</li>
+                                <li>Responsable de la création de pages fonctionnelles, esthétiques et conviviales.</li>
+                            </ul>
+                        </div>
+
+                        <div class="cv-entry-paper">
+                            <div class="cv-entry-head">
+                                <strong>Stage Développeur - PC4You</strong>
+                                <span class="cv-date-paper">Loches, 2022 - 2023</span>
+                            </div>
+                            <ul>
+                                <li>Mise à jour et maintenance du CRM Dolibarr.</li>
+                                <li>Modification d'éléments sur un module de gestion de stock.</li>
+                            </ul>
+                        </div>
+                    </section>
+
+                    <section class="cv-section-paper">
+                        <h3 class="cv-title-paper">FORMATION</h3>
+                        <div class="cv-entry-paper">
+                            <div class="cv-entry-head">
+                                <strong>2025 - Diplôme Obtenu : BTS SIO SLAM</strong>
+                            </div>
+                            <div style="font-style: italic;">Lycée Guy Chauvet, Loudun</div>
+                        </div>
+                        <div class="cv-entry-paper">
+                            <div class="cv-entry-head">
+                                <strong>2022 - BAC STI2D SIN</strong>
+                            </div>
+                            <div style="font-style: italic;">Lycée Jacques de Vaucanson, Tours</div>
+                        </div>
+                    </section>
+
+                    <section class="cv-section-paper">
+                        <h3 class="cv-title-paper">COMPÉTENCES TECHNIQUES</h3>
+                        
+                        <div class="cv-skill-cat">
+                            <strong>Langages</strong><br>
+                            <span class="cv-tag">PHP</span> 
+                            <span class="cv-tag">Java</span> 
+                            <span class="cv-tag">Python (Notions)</span> 
+                            <span class="cv-tag">C# (Notions)</span> 
+                            <span class="cv-tag">C++ (Notions)</span> 
+                            <span class="cv-tag">HTML5 / CSS3</span> 
+                            <span class="cv-tag">JavaScript (Base)</span> 
+                            <span class="cv-tag">SQL</span>
+                        </div>
+
+                        <div class="cv-skill-cat">
+                            <strong>Frameworks & BDD</strong><br>
+                            <span class="cv-tag">PostgreSQL</span> 
+                            <span class="cv-tag">MariaDB / MySQL</span> 
+                            <span class="cv-tag">Oracle DB (Notions)</span> 
+                            <span class="cv-tag">FakerPHP (Librairie)</span>
+                        </div>
+
+                        <div class="cv-skill-cat">
+                            <strong>Outils & Environnement</strong><br>
+                            <span class="cv-tag">Git / GitHub / Desktop</span> 
+                            <span class="cv-tag">VS Code / VSCodium</span> 
+                            <span class="cv-tag">IntelliJ IDEA</span> 
+                            <span class="cv-tag">PHPStorm</span>
+                        </div>
+
+                        <div class="cv-skill-cat">
+                            <strong>Méthodologies</strong><br>
+                            <span class="cv-tag">POO</span> 
+                            <span class="cv-tag">Modèle MVC</span> 
+                            <span class="cv-tag">Agile (Sensibilisation)</span> 
+                            <span class="cv-tag">Versionning (Git)</span>
+                        </div>
+                    </section>
+
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- CONTENU PRINCIPAL -->
-    <main>
-        <!-- Section 1 : Hero & GitHub Feed -->
-        <section id="hero">
-            <div class="hero-grid">
-                <!-- Card Gauche : Présentation -->
-                <div class="glass-card">
-                    <span class="subtitle academic">System Online</span>
-                    
-                    <!-- ID "dynamic-name" pour l'effet Hacker -->
-                    <h1 class="main-title" id="dynamic-name">Florent Leterme</h1>
-                    
-                    <h2 class="sub-title">Développeur <span class="highlight-w">Web</span> & <span class="highlight-w">Logiciel</span></h2>
-                    <p class="intro-text">Diplômé du BTS SIO SLAM. Rigueur académique le jour, expérimentations techniques la nuit.</p>
-                    
-                    <!-- Stack Technique Animée -->
-                    <div class="tech-stack-row">
-                        <i class="devicon-php-plain tech-icon" style="color: #a29bfe;" title="PHP"></i>
-                        <i class="devicon-java-plain tech-icon" style="color: #fab1a0;" title="Java"></i>
-                        <i class="devicon-html5-plain tech-icon" style="color: #e17055;" title="HTML5"></i>
-                        <i class="devicon-css3-plain tech-icon" style="color: #74b9ff;" title="CSS3"></i>
-                        <i class="devicon-javascript-plain tech-icon" style="color: #ffeaa7;" title="JavaScript"></i>
-                        <i class="devicon-postgresql-plain tech-icon" style="color: #81ecec;" title="PostgreSQL"></i>
-                        <i class="devicon-git-plain tech-icon" style="color: #ff7675;" title="Git"></i>
-                    </div>
-
-                    <div class="cv-actions no-border-top">
-                        <a href="#academic" class="btn-cv primary">Initialiser le Profil</a>
-                    </div>
-                </div>
-
-                <!-- Card Droite : GitHub Live Feed -->
-                <div class="glass-card github-feed-card">
-                    <div class="feed-header">
-                        <span class="subtitle creative small">GH-DATALINK</span>
-                        <div class="live-indicator"><div class="blink-dot"></div> LIVE FEED</div>
-                    </div>
-                    
-                    <div class="feed-container">
-                        <div class="feed-track">
-                            <!-- Liste des projets (Dupliqués pour scroll infini) -->
-                            <div class="project-row">
-                                <span class="proj-name">Intranet CHU Tours</span>
-                                <div class="proj-meta"><span>UX/UI Refonte</span><span class="lang-badge l-php">PHP</span></div>
-                            </div>
-                            <div class="project-row">
-                                <span class="proj-name">Simple Storage</span>
-                                <div class="proj-meta"><span>Gestion Stock</span><span class="lang-badge l-sql">PSQL</span></div>
-                            </div>
-                            <div class="project-row">
-                                <span class="proj-name">SpacePanel</span>
-                                <div class="proj-meta"><span>Dashboard TR</span><span class="lang-badge l-js">Node</span></div>
-                            </div>
-                            <div class="project-row">
-                                <span class="proj-name">LogoCreator</span>
-                                <div class="proj-meta"><span>Générateur GUI</span><span class="lang-badge l-py">Python</span></div>
-                            </div>
-                            <!-- Duplication pour boucle -->
-                            <div class="project-row">
-                                <span class="proj-name">Intranet CHU Tours</span>
-                                <div class="proj-meta"><span>UX/UI Refonte</span><span class="lang-badge l-php">PHP</span></div>
-                            </div>
-                            <div class="project-row">
-                                <span class="proj-name">Simple Storage</span>
-                                <div class="proj-meta"><span>Gestion Stock</span><span class="lang-badge l-sql">PSQL</span></div>
-                            </div>
-                            <div class="project-row">
-                                <span class="proj-name">SpacePanel</span>
-                                <div class="proj-meta"><span>Dashboard TR</span><span class="lang-badge l-js">Node</span></div>
-                            </div>
-                            <div class="project-row">
-                                <span class="proj-name">LogoCreator</span>
-                                <div class="proj-meta"><span>Générateur GUI</span><span class="lang-badge l-py">Python</span></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Section 2 : Parcours Académique -->
-        <section id="academic">
-            <div class="glass-card full-width">
-                <span class="subtitle academic">Data Log: Professionnel</span>
-                <h2>🎓 Parcours & Compétences</h2>
-                
-                <div class="xp-grid">
-                    <!-- Item 1 -->
-                    <div class="xp-item academic-style">
-                        <div class="xp-header">
-                            <span class="xp-date">2023 - 2025</span>
-                            <span class="status-dot green"></span>
-                        </div>
-                        <h3>CHU de Tours</h3>
-                        <p class="xp-desc">Refonte Intranet Médecins.</p>
-                        <div class="xp-tags">
-                            <span>Agile</span>
-                            <span>UX/UI</span>
-                        </div>
-                    </div>
-
-                    <!-- Item 2 -->
-                    <div class="xp-item academic-style">
-                        <div class="xp-header">
-                            <span class="xp-date">Projet BTS</span>
-                            <span class="status-dot blue"></span>
-                        </div>
-                        <h3>Simple Storage</h3>
-                        <p class="xp-desc">App Fullstack Gestion.</p>
-                        <div class="xp-tags">
-                            <span>PHP</span>
-                            <span>PostgreSQL</span>
-                        </div>
-                    </div>
-
-                    <!-- Item 3 : Stack redesignée -->
-                    <div class="xp-item academic-style full-span-mobile">
-                        <div class="xp-header">
-                            <span class="xp-date">Core Stack</span>
-                            <i class="devicon-devicon-plain" style="font-size: 1rem; color: #fff;"></i>
-                        </div>
-                        <h3>Technologies</h3>
-                        <div class="tech-badges">
-                            <span class="t-badge">PHP</span>
-                            <span class="t-badge">Java</span>
-                            <span class="t-badge">SQL</span>
-                            <span class="t-badge">Git</span>
-                            <span class="t-badge">HTML/CSS</span>
-                            <span class="t-badge">VS Code</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="cv-actions">
-                    <a href="cv.pdf" download class="btn-cv primary">Download Data (PDF)</a>
-                    <button id="open-modal-btn" class="btn-cv">View Source (HTML)</button>
-                    <a href="https://github.com/LetermeFlorent" target="_blank" class="btn-cv github-pro">GitHub Pro</a>
-                </div>
-                <div class="section-nav">
-                    <a href="#hero" class="btn-cv">↑ Retour au Début</a>
-                    <a href="#creative" class="btn-cv">Prochain Profil ↓</a>
-                </div>
-            </div>
-        </section>
-
-        <!-- Section 3 : Projets Perso -->
-        <section id="creative">
-            <div class="glass-card full-width border-creative">
-                <span class="subtitle creative">Labo Expérimental</span>
-                <h2>🧪 Projets @Dreyka-Oas</h2>
-                <p>Développement moteurs de jeux, outils systèmes et interfaces.</p>
-                
-                <div class="xp-grid">
-                    <!-- Creative Item 1 -->
-                    <div class="xp-item creative-style">
-                        <div class="xp-header">
-                            <span class="xp-type">Dashboard</span>
-                            <span class="version">v2.0</span>
-                        </div>
-                        <h3>SpacePanel</h3>
-                        <p class="xp-desc">Panel Admin Node.js/Socket.io TR.</p>
-                        <div class="progress-bar"><div class="fill" style="width: 90%"></div></div>
-                    </div>
-
-                    <!-- Creative Item 2 -->
-                    <div class="xp-item creative-style">
-                        <div class="xp-header">
-                            <span class="xp-type">Tool</span>
-                            <span class="version">v1.5</span>
-                        </div>
-                        <h3>LogoCreator</h3>
-                        <p class="xp-desc">Générateur GUI Python Tkinter.</p>
-                        <div class="progress-bar"><div class="fill" style="width: 100%"></div></div>
-                    </div>
-
-                    <!-- Creative Item 3 -->
-                    <div class="xp-item creative-style">
-                        <div class="xp-header">
-                            <span class="xp-type">Engine</span>
-                            <span class="version">Alpha</span>
-                        </div>
-                        <h3>Game Dev</h3>
-                        <p class="xp-desc">Moteur 2D JS Canvas Custom.</p>
-                        <div class="progress-bar"><div class="fill" style="width: 60%"></div></div>
-                    </div>
-                </div>
-
-                <div class="cv-actions no-border-top padding-top-small">
-                    <a href="https://github.com/Dreyka-Oas" target="_blank" class="btn-cv github-exp">GitHub Expérimental</a>
-                </div>
-                <div class="section-nav">
-                    <a href="#academic" class="btn-cv">↑ Profil Précédent</a>
-                    <a href="#hero" class="btn-cv">Retour au Début ↑</a>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <!-- Pied de page -->
-    <footer>
-        <div class="footer-content">
-            <h3 class="footer-name">Florent Leterme</h3>
-            <div class="footer-links">
-                <a href="https://www.linkedin.com/in/leterme-florent/" target="_blank" class="footer-btn">LinkedIn</a>
-                <a href="https://github.com/LetermeFlorent" target="_blank" class="footer-btn">GitHub Pro</a>
-                <a href="https://github.com/Dreyka-Oas" target="_blank" class="footer-btn">GitHub Exp</a>
-                <a href="mailto:letermeflorent@gmail.com" class="footer-btn">Contact</a>
-            </div>
-            <p class="copyright">© 2025 Florent Leterme. System Verified.</p>
-        </div>
-    </footer>
-
-    <!-- Librairies Externes -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollToPlugin.min.js"></script>
-
-    <!-- Scripts Personnalisés -->
-    <script src="scripts/audio-manager.js"></script>
-    <script src="scripts/scene-3d.js"></script>
-    <script src="scripts/main-ui.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script type="module" src="js/main.js"></script>
 </body>
 </html>

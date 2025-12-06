@@ -1,0 +1,57 @@
+/* =========================================
+   FOOTER & CONTACT
+   ========================================= */
+.footer { 
+    padding: var(--spacing-xl) 0 50px; 
+    border-top: 1px solid var(--border); 
+    margin-top: 50px; 
+}
+
+.big-mail {
+    display: block; 
+    font-size: clamp(1.5rem, 4vw, 3.5rem); 
+    font-weight: 700; 
+    color: var(--text-main); 
+    text-decoration: none; 
+    line-height: 1.2; 
+    margin: 30px 0 var(--spacing-lg);
+    transition: color var(--transition-normal), 
+                transform var(--transition-normal);
+}
+
+.big-mail:hover { 
+    color: var(--accent); 
+    transform: translateX(10px); 
+}
+
+.footer-infos { 
+    display: flex; 
+    justify-content: space-between; 
+    font-size: 0.9rem; 
+    color: var(--text-muted); 
+    align-items: center; 
+}
+
+.social-links { 
+    display: flex; 
+    gap: 25px; 
+}
+
+.social-btn {
+    font-size: 1.8rem;
+    color: var(--text-muted);
+    transition: all var(--transition-normal);
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+}
+
+.social-btn.linkedin:hover { 
+    color: #0077b5; 
+    transform: translateY(-3px); 
+}
+
+.social-btn.github:hover { 
+    color: #111; 
+    transform: translateY(-3px) rotate(10deg); 
+}

@@ -1,0 +1,117 @@
+/* =========================================
+   HERO SECTION
+   ========================================= */
+.hero-section {
+    min-height: 100vh; 
+    height: auto; 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center;
+    padding: 120px 0 100px; 
+    position: relative; 
+    z-index: 1;
+}
+
+/* Badge status */
+.badge-pill {
+    display: inline-flex; 
+    align-items: center;
+    gap: 10px;
+    padding: 6px 16px; 
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl); 
+    font-size: 0.75rem; 
+    font-weight: 600;
+    text-transform: uppercase; 
+    letter-spacing: 1px;
+    margin-bottom: 30px; 
+    color: var(--text-main); 
+    background: #fff;
+    box-shadow: var(--shadow-sm);
+    overflow: hidden; 
+    position: relative; 
+    z-index: 2;
+}
+
+/* Pastille verte animée */
+.status-dot {
+    width: 6px;  
+    height: 6px;
+    background-color: #22c55e;
+    border-radius: 50%;
+    position: relative;
+    display: block;
+    flex-shrink: 0; 
+}
+
+.status-dot::after {
+    content: '';
+    position: absolute;
+    inset: -2px; 
+    border-radius: 50%;
+    background-color: #22c55e;
+    opacity: 0.5;
+    animation: pulse 2.5s infinite cubic-bezier(0.66, 0, 0, 1);
+    z-index: -1;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); opacity: 0.8; }
+    100% { transform: scale(3); opacity: 0; } 
+}
+
+/* Footer hero */
+.hero-footer {
+    position: relative;
+    margin-top: var(--spacing-lg);
+    bottom: auto;
+    left: 0;
+    right: 0;
+    display: flex; 
+    justify-content: space-between; 
+    align-items: flex-end;
+    font-size: 1.1rem; 
+    color: var(--text-muted);
+}
+
+/* Marquee Banner */
+.marquee-wrapper {
+    background: var(--text-main); 
+    color: #fff; 
+    padding: 30px 0; 
+    overflow: hidden;
+    transform: rotate(-1deg); 
+    width: 105%; 
+    margin-left: -2.5%;
+}
+
+.marquee-content {
+    display: flex; 
+    white-space: nowrap; 
+    font-size: 3rem; 
+    font-weight: 700;
+    will-change: transform; 
+    animation: scroll 40s linear infinite;
+    align-items: center;
+}
+
+.marquee-content span { 
+    margin-right: 15px; 
+}
+
+.marquee-content .sep { 
+    color: #444; 
+    font-size: 1rem; 
+    margin: 0 30px; 
+    vertical-align: middle; 
+}
+
+.marquee-content .perso { 
+    color: var(--accent-perso); 
+    font-family: monospace; 
+} 
+
+@keyframes scroll { 
+    from { transform: translateX(0); } 
+    to { transform: translateX(-50%); } 
+}

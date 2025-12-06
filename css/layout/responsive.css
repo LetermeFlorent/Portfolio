@@ -1,0 +1,185 @@
+/* =========================================
+   RESPONSIVE (SMARTPHONE & TABLETTE)
+   ========================================= */
+
+@media (max-width: 1024px) {
+    .square-grid { 
+        grid-template-columns: repeat(2, 1fr); 
+    }
+    
+    .cv-paper { 
+        width: 100%; 
+        min-height: auto; 
+        padding: var(--spacing-sm); 
+    }
+}
+
+@media (max-width: 768px) {
+    /* Navbar */
+    .navbar { 
+        padding: 15px var(--spacing-sm); 
+        justify-content: space-between; 
+    }
+    
+    .navbar.scrolled { 
+        padding: 10px var(--spacing-sm); 
+        width: 95%; 
+        left: 50%; 
+        transform: translateX(-50%); 
+    }
+    
+    .nav-center { 
+        display: none; 
+    } 
+    
+    .btn-outline { 
+        font-size: 0.8rem; 
+        padding: 6px 12px; 
+    }
+
+    /* Hero */
+    .hero-title { 
+        font-size: 2.8rem; 
+        margin-bottom: 30px; 
+    }
+    
+    .indent { 
+        margin-left: 0; 
+    } 
+    
+    .hero-footer { 
+        margin-top: var(--spacing-md); 
+        flex-direction: column; 
+        align-items: flex-start; 
+        gap: 15px; 
+        font-size: 1rem; 
+    }
+    
+    /* Sections */
+    .section { 
+        padding: 80px 0; 
+    }
+    
+    .github-group { 
+        margin-bottom: 80px; 
+    }
+    
+    .pagination-controls { 
+        margin-bottom: 50px; 
+        margin-top: 30px; 
+    }
+
+    /* Grilles */
+    .square-grid, .tech-grid { 
+        grid-template-columns: 1fr; 
+        grid-template-rows: auto; 
+        grid-auto-rows: auto; 
+        overflow: visible;
+        gap: var(--spacing-sm); 
+    }
+    
+    .tech-card, .project-box { 
+        padding: var(--spacing-sm); 
+        aspect-ratio: auto !important; 
+        min-height: auto; 
+    }
+    
+    .project-box { 
+        min-height: 180px; 
+    } 
+
+    .project-box:hover, .tech-card:hover { 
+        transform: none; 
+        box-shadow: var(--shadow-sm); 
+    }
+
+    /* Pagination */
+    .pagination-controls { 
+        flex-direction: row; 
+        gap: var(--spacing-xs); 
+        margin-top: 30px; 
+    }
+    
+    .page-btn { 
+        padding: 8px 15px; 
+        font-size: 0.85rem; 
+    }
+
+    /* Footer */
+    .footer-infos { 
+        flex-direction: column; 
+        gap: 15px; 
+        text-align: center; 
+    }
+    
+    .col.right { 
+        text-align: center; 
+    }
+    
+    /* Modale plein écran */
+    .modal-wrapper { 
+        padding: 0 !important; 
+        align-items: flex-start; 
+    }
+    
+    .modal-panel { 
+        width: 100% !important; 
+        height: 100dvh !important; 
+        max-height: none !important; 
+        border-radius: 0 !important; 
+        border: none; 
+        margin: 0;
+    }
+    
+    .modal-head { 
+        padding: 10px 15px; 
+        height: 60px; 
+    }
+    
+    .modal-body-pdf { 
+        padding: var(--spacing-xs); 
+        background: #e5e7eb; 
+    }
+    
+    /* CV sur mobile */
+    .cv-paper { 
+        width: 100%; 
+        padding: 15px; 
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
+        border-radius: var(--radius-sm) !important; 
+        margin-bottom: var(--spacing-sm);
+    }
+    
+    .cv-left h1 { 
+        font-size: 16pt; 
+    }
+    
+    .cv-right { 
+        text-align: left; 
+        margin-top: var(--spacing-xs); 
+    }
+    
+    .cv-header-paper { 
+        flex-direction: column; 
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-title { 
+        font-size: 2.2rem; 
+    }
+    
+    .big-mail { 
+        font-size: 1.5rem; 
+    }
+    
+    .btn-download span { 
+        display: none; 
+    } 
+    
+    .btn-download::after { 
+        content: "PDF"; 
+        font-size: 0.8rem; 
+        margin-left: 5px; 
+    }
+}

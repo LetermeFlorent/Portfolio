@@ -1,0 +1,110 @@
+/* =========================================
+   NAVBAR - DESIGN ÎLOT FLOTTANT
+   ========================================= */
+.navbar {
+    position: fixed; 
+    top: 0; 
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%; 
+    max-width: 100%; 
+    padding: 30px 50px;
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    z-index: 100;
+    background: transparent;
+    border-radius: 0;
+    transition: all var(--transition-slow);
+}
+
+.navbar a, .navbar button { 
+    color: var(--text-main);
+    text-decoration: none; 
+    transition: color var(--transition-normal);
+}
+
+/* Logo */
+.logo { 
+    font-weight: 800; 
+    font-size: 1.2rem; 
+}
+
+.logo .highlight { 
+    color: var(--accent); 
+    transition: color var(--transition-normal); 
+}
+
+/* Navigation centrale */
+.nav-center { 
+    display: flex; 
+    gap: 10px; 
+}
+
+.nav-link { 
+    font-weight: 600; 
+    font-size: 0.9rem; 
+    opacity: 0.7; 
+    padding: 8px 18px; 
+    border-radius: var(--radius-xl); 
+    transition: background-color var(--transition-slow), 
+                opacity var(--transition-slow), 
+                color var(--transition-slow);
+}
+
+.nav-link:hover { 
+    opacity: 1; 
+    text-decoration: none; 
+    background-color: rgba(0, 0, 0, 0.06); 
+    color: #000;
+}
+
+/* Bouton CV */
+.btn-outline {
+    background: transparent; 
+    border: 1px solid var(--text-main);
+    color: var(--text-main);
+    padding: 8px 20px;
+    border-radius: var(--radius-xl); 
+    font-size: 0.9rem; 
+    transition: var(--transition-normal);
+}
+
+.btn-outline:hover { 
+    background: var(--text-main); 
+    color: #fff;
+}
+
+/* État scrollé - Îlot flottant */
+.navbar.scrolled {
+    top: 20px;
+    width: 90%;
+    max-width: 1200px;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-radius: var(--radius-xl);
+    padding: 15px 40px;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.navbar.scrolled a, 
+.navbar.scrolled button { 
+    color: var(--text-main); 
+}
+
+.navbar.scrolled .logo .highlight { 
+    color: var(--accent); 
+}
+
+.navbar.scrolled .btn-outline {
+    border-color: var(--border);
+    color: var(--text-main);
+}
+
+.navbar.scrolled .btn-outline:hover {
+    background: var(--text-main);
+    color: #fff;
+    border-color: var(--text-main);
+}
